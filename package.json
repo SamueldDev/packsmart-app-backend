@@ -1,0 +1,17 @@
+{
+  "name": "packsmart-backend",
+  "version": "1.0.0",
+  "main": "app.js",
+  "type": "module",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
