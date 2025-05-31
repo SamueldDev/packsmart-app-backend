@@ -2,7 +2,8 @@
 
 import Checklist from "../models/checklistModel.js";
 import ChecklistItem from "../models/CheckListItemModel.js";
-
+import User from "../models/userModel.js";
+import sequelize from "../config/db.js";
 
 // GET all pre-made checklists (no userId, isPreMade: true)
 export const getPreMadeChecklists = async (req, res) => {
@@ -20,8 +21,6 @@ export const getPreMadeChecklists = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
-
 
 
 // Optional route: POST /api/checklists/premade (admin use)
@@ -50,29 +49,64 @@ export const createPreMadeChecklist = async (req, res) => {
 
 
 
-
-
-
 // CREATE a custom checklist for a user
 export const createCustomChecklist = async (req, res) => {
-  const { userId, name, tripType, items } = req.body;
+  const {
+    userId,
+    name,
+    tripType,
+    destination,
+    duration,
+    startDate,
+    endDate,
+    items,
+  } = req.body;
+
+  const t = await sequelize.transaction();
+
   try {
-    const checklist = await Checklist.create({ userId, name, tripType, isPreMade: false });
-    if (items && items.length > 0) {
-      const checklistItems = items.map((item) => ({
-        item,
-        checklistId: checklist.id,
-      }));
-      await ChecklistItem.bulkCreate(checklistItems);
+
+     const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(400).json({ message: "Invalid userId" });
     }
-    const fullChecklist = await Checklist.findByPk(checklist.id, {
-      include: [ChecklistItem], 
-    });
-    res.status(201).json(fullChecklist); 
+
+    const checklist = await Checklist.create({
+      userId,
+      name,
+      tripType,
+      destination,
+      duration,
+      startDate,
+      endDate,
+      items,
+      isPreMade: false,
+    },{ transaction: t });
+
+    console.log("Checklist created with ID:", checklist.id);
+
+      const itemsWithChecklistId = items.map(item => ({
+      item: typeof item === "string" ? item : item.item,
+      checklistId: checklist.id,
+    }));
+    
+    await ChecklistItem.bulkCreate(itemsWithChecklistId, { transaction: t });
+
+    // Step 3: commit
+    await t.commit();
+
+    res.status(201).json({ message: "Checklist created", checklist });
+
+
   } catch (error) {
+     await t.rollback();
+    console.error("Transaaction failed", error);
     res.status(500).json({ message: error.message });
+
+ 
   }
 };
+
 
 
 
@@ -117,7 +151,6 @@ export const deleteChecklist = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-
 
 
 // get smart suggestion

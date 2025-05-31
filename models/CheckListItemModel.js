@@ -41,8 +41,16 @@ ChecklistItem.init(
 );
 
 // One checklist can have many items
-Checklist.hasMany(ChecklistItem, { foreignKey: "checklistId", onDelete: "CASCADE" });
-ChecklistItem.belongsTo(Checklist, { foreignKey: "checklistId" });
+
+// ChecklistItem.belongsTo(Checklist, { foreignKey: "checklistId" });
+// Checklist.hasMany(ChecklistItem, { foreignKey: "checklistId", onDelete: "CASCADE" });
+
+
+
+
+
+
+
 
 
 

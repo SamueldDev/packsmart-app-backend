@@ -3,6 +3,7 @@ import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/db.js";
 import User from "./userModel.js";
 
+
 class Checklist extends Model {}
 
 Checklist.init(
@@ -48,13 +49,13 @@ Checklist.init(
   {
     sequelize,
     modelName: "Checklist",
+    tableName: "checklists",
   }
 );
 
 // One user can have many custom checklists
-User.hasMany(Checklist, { foreignKey: "userId", onDelete: "CASCADE" });
-Checklist.belongsTo(User, { foreignKey: "userId" });
-
+// User.hasMany(Checklist, { foreignKey: "userId", onDelete: "CASCADE" });
+// Checklist.belongsTo(User, { foreignKey: "userId" });
 
 export default Checklist;
 

@@ -1,0 +1,19 @@
+
+
+// models/index.js
+import sequelize from "../config/db.js";
+
+import Checklist from "./checklistModel.js";
+import ChecklistItem from "./CheckListItemModel.js"
+
+
+import User from "./userModel.js";
+
+// Setup associations
+User.hasMany(Checklist, { foreignKey: "userId", onDelete: "CASCADE" });
+Checklist.belongsTo(User, { foreignKey: "userId" });
+
+Checklist.hasMany(ChecklistItem, { foreignKey: "checklistId", onDelete: "CASCADE" });
+ChecklistItem.belongsTo(Checklist, { foreignKey: "checklistId" });
+
+export { sequelize, Checklist, ChecklistItem, User };

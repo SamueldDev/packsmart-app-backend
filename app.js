@@ -1,6 +1,7 @@
 
 import express from "express";
-import sequelize from "./config/db.js";
+// import sequelize from "./config/db.js";
+import { sequelize } from "./models/index.js"
 
 import usersRoutes from "./routes/usersRoutes.js"
 import tripRoutes from "./routes/tripRoutes.js"
@@ -28,8 +29,8 @@ const startServer = async () => {
   try {
     await sequelize.authenticate();
     console.log("Database connected successfully.");
-    // await sequelize.sync({ alter: true }); // or { force: true } in dev to reset tables
-    await sequelize.sync({ force: true }); // ⚠️ This will drop and recreate all tables
+    await sequelize.sync({ alter: true }); // or { force: true } in dev to reset tables
+    //await sequelize.sync({ force: true }); // ⚠️ This will drop and recreate all tables
 
 
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
