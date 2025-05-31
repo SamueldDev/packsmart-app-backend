@@ -9,6 +9,7 @@ import {
   getUserChecklists,
   toggleChecklistItem,
   deleteChecklist,
+  getSmartSuggestions,
 } from "../controllers/checkListController.js"
 
 const router = express.Router();
@@ -26,5 +27,8 @@ router.patch("/item/:itemId", toggleChecklistItem);
 
 // Delete checklist
 router.delete("/:checklistId", deleteChecklist);
+
+// smart suggestion based on history
+router.get("/suggestions/:userId", getSmartSuggestions)
 
 export default router;

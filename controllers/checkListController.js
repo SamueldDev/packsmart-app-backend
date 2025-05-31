@@ -66,9 +66,9 @@ export const createCustomChecklist = async (req, res) => {
       await ChecklistItem.bulkCreate(checklistItems);
     }
     const fullChecklist = await Checklist.findByPk(checklist.id, {
-      include: [ChecklistItem],
+      include: [ChecklistItem], 
     });
-    res.status(201).json(fullChecklist);
+    res.status(201).json(fullChecklist); 
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -117,3 +117,44 @@ export const deleteChecklist = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+
+// get smart suggestion
+export const getSmartSuggestions = async (req, res) => {
+  const { userId } = req.params;
+  const { tripType } = req.query;
+
+  try {
+    const whereClause = {
+      userId,
+      isPreMade: false,
+    };
+    if (tripType) whereClause.tripType = tripType;
+
+    const checklists = await Checklist.findAll({
+      where: whereClause,
+      include: [ChecklistItem],
+    });
+
+    // Count frequency of items
+    const itemFrequency = {};
+    for (const checklist of checklists) {
+      for (const item of checklist.ChecklistItems) {
+        const key = item.item.trim().toLowerCase();
+        itemFrequency[key] = (itemFrequency[key] || 0) + 1;
+      }
+    }
+
+    // Sort and return top N suggestions
+    const suggestions = Object.entries(itemFrequency)
+      .sort((a, b) => b[1] - a[1])
+      .map(([item]) => item)
+      .slice(0, 10); // Top 10 most used
+
+    res.json({ suggestions });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+

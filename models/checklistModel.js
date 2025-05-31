@@ -1,10 +1,6 @@
 
-
-
-
 import { DataTypes, Model } from "sequelize";
 import sequelize from "../config/db.js";
-
 import User from "./userModel.js";
 
 class Checklist extends Model {}
@@ -20,20 +16,38 @@ Checklist.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
-    tripType: {
-      type: DataTypes.STRING,
-      allowNull: true, // for pre-made checklists
-    },
     isPreMade: {
       type: DataTypes.BOOLEAN,
       defaultValue: false,
+    },
+    userId: {
+      type: DataTypes.UUID,
+      allowNull: true,
+    },
+    tripType: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    destination: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    duration: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    startDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
+    },
+    endDate: {
+      type: DataTypes.DATE,
+      allowNull: true,
     },
   },
   {
     sequelize,
     modelName: "Checklist",
-    tableName: "checklists",
-    timestamps: true,
   }
 );
 
@@ -41,4 +55,44 @@ Checklist.init(
 User.hasMany(Checklist, { foreignKey: "userId", onDelete: "CASCADE" });
 Checklist.belongsTo(User, { foreignKey: "userId" });
 
+
 export default Checklist;
+
+
+
+
+
+
+
+
+
+
+// class Checklist extends Model {}
+
+// Checklist.init(
+//   {
+//     id: {
+//       type: DataTypes.UUID,
+//       defaultValue: DataTypes.UUIDV4,
+//       primaryKey: true,
+//     },
+//     name: {
+//       type: DataTypes.STRING,
+//       allowNull: false,
+//     },
+//     tripType: {
+//       type: DataTypes.STRING,
+//       allowNull: true, // for pre-made checklists
+//     },
+//     isPreMade: {
+//       type: DataTypes.BOOLEAN,
+//       defaultValue: false,
+//     },
+//   },
+//   {
+//     sequelize,
+//     modelName: "Checklist",
+//     tableName: "checklists",
+//     timestamps: true,
+//   }
+// );

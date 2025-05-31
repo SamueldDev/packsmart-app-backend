@@ -28,7 +28,9 @@ const startServer = async () => {
   try {
     await sequelize.authenticate();
     console.log("Database connected successfully.");
-    await sequelize.sync({ alter: true }); // or { force: true } in dev to reset tables
+    // await sequelize.sync({ alter: true }); // or { force: true } in dev to reset tables
+    await sequelize.sync({ force: true }); // ⚠️ This will drop and recreate all tables
+
 
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   } catch (error) {
