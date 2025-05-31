@@ -5,6 +5,8 @@ import sequelize from "./config/db.js";
 import usersRoutes from "./routes/usersRoutes.js"
 import tripRoutes from "./routes/tripRoutes.js"
 
+import checklistRoutes from "./routes/checklistRoutes.js"
+
 const PORT = process.env.PORT || 5000;  
 
 
@@ -18,6 +20,7 @@ app.use(express.json());
 // routes
 app.use("/api/users", usersRoutes)
 app.use("/api/trips", tripRoutes)
+app.use("/api/checklists", checklistRoutes)
 
 
 // start server
