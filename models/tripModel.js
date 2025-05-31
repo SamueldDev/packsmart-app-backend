@@ -16,12 +16,28 @@ Trip.init(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
+    userId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+    },
+      name: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
     tripType: {
       type: DataTypes.STRING,
       allowNull: false,
     },
     destination: {
       type: DataTypes.STRING,
+      allowNull: true,
+    },
+    startDate: {
+      type: DataTypes.DATEONLY,
+      allowNull: true,
+    },
+    endDate: {
+      type: DataTypes.DATEONLY,
       allowNull: true,
     },
     duration: {
@@ -41,7 +57,7 @@ Trip.init(
   }
 );
 
-// Define relation: One User can have many Trips
+// Associations
 User.hasMany(Trip, { foreignKey: "userId", onDelete: "CASCADE" });
 Trip.belongsTo(User, { foreignKey: "userId" });
 

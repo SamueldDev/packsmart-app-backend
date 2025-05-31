@@ -1,16 +1,18 @@
 
-
 import express from "express";
 import sequelize from "./config/db.js";
 
 import usersRoutes from "./routes/usersRoutes.js"
 import tripRoutes from "./routes/tripRoutes.js"
 
-
-const app = express();
-app.use(express.json());
-
 const PORT = process.env.PORT || 5000;  
+
+
+// initialize the app
+const app = express();
+
+
+app.use(express.json());
 
 
 // routes
@@ -18,6 +20,7 @@ app.use("/api/users", usersRoutes)
 app.use("/api/trips", tripRoutes)
 
 
+// start server
 const startServer = async () => {
   try {
     await sequelize.authenticate();

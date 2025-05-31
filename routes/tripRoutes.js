@@ -1,33 +1,14 @@
 
 
-import express from "express";
-
-import User from "../models/userModel.js";
-
-// import User from "../models/userModel.js";
-import Trip from "../models/TripModel.js";
+import express from "express"
 
 
-// import Trip from "../models/TripModel.js";
-// import User from "../models/UserModel.js";
+import { createTrip, getTrips } from "../controllers/tripController.js"
 
+const router = express.Router()
 
-const router = express.Router();
+router.post("/", createTrip)
+router.get("/", getTrips)
 
-// Create trip for user
-router.post("/:userId", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { tripType, destination, duration, metadata } = req.body; 
+export default router
 
-    const user = await User.findByPk(userId);
-    if (!user) return res.status(404).json({ error: "User not found" });
-
-    const trip = await Trip.create({ userId, tripType, destination, duration, metadata });
-    res.status(201).json(trip);
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
-
-export default router;

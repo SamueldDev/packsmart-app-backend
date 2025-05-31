@@ -3,7 +3,7 @@
 
 import { DataTypes, Model } from "sequelize";
 
-import sequelize from "../config/db";
+import sequelize from "../config/db.js";
 
 class User extends Model {}
 
@@ -13,6 +13,10 @@ User.init(
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
+    },
+      fullname: {
+      type: DataTypes.STRING,
+      allowNull: false,
     },
     email: {
       type: DataTypes.STRING,
@@ -27,7 +31,7 @@ User.init(
   },
   {
     sequelize,
-    modelName: "User",
+    modelName: "User", 
     tableName: "users",
     timestamps: true,
   }
