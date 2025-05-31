@@ -1,11 +1,10 @@
 
 
 import express from "express";
-//import User from "../models/userModel.js";
+
+import User from "../models/userModel.js";
 
 
-import User from "../models/UsersModel.js";
-// import User from "../models/UserModel.js";
 
 
 const router = express.Router();

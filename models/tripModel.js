@@ -5,9 +5,7 @@ import { DataTypes, Model } from "sequelize";
 
 import sequelize from "../config/db.js";
 
-import User from "./UsersModel.js";
-
-//import User from "./userModel";
+import User from "./userModel.js";
 
 class Trip extends Model {}
 
