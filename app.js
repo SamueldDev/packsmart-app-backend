@@ -15,6 +15,7 @@ import { sequelize } from "./models/index.js";
 import usersRoutes from "./routes/usersRoutes.js";
 import tripRoutes from "./routes/tripRoutes.js";
 import checklistRoutes from "./routes/checklistRoutes.js";
+import runReminderJob from "./jobs/reminderJobs.js";
 
 const PORT = process.env.PORT || 5000;
 
@@ -34,6 +35,16 @@ app.get("/", (req, res) => {
   res.send("PackSmart API is Live");
 });
 
+// to test remainder job
+app.get("/api/test-reminder", async (req, res) => {
+  try {
+    await runReminderJob();
+    res.send("Reminder job executed.");
+  } catch (err) {
+    res.status(500).send("Reminder job failed.");
+  }
+});
+
 // Create HTTP server
 const server = http.createServer(app);
 
@@ -51,8 +62,18 @@ const startServer = async () => {
     console.log("🌍 PORT ENV:", process.env.PORT);
 
     server.listen(PORT, () => {
-      console.log(`✅ Server running on port ${PORT}`);
+      console.log(`✅ Server running on port ${PORT}`);  
     });
+
+        server.on('close', () => {
+      console.log("🚫 Server is closing...");
+    });
+
+    process.on('SIGTERM', () => {
+      console.log("📴 Received SIGTERM. Shutting down.");
+      server.close(() => process.exit(0));
+    });
+
 
   } catch (error) {
     console.error("❌ Unable to connect to the database:", error.name, error.message);
