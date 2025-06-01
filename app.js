@@ -2,6 +2,7 @@
 import express from "express";
 
 // import sequelize from "./config/db.js";
+
 import { sequelize } from "./models/index.js"
 
 import usersRoutes from "./routes/usersRoutes.js"
@@ -28,15 +29,23 @@ app.use("/api/checklists", checklistRoutes)
 // start server
 const startServer = async () => {
   try {
+    console.log("🔄 Attempting to connect to the database...");
+
     await sequelize.authenticate();
     console.log("Database connected successfully.");
+
     await sequelize.sync({ alter: true }); // or { force: true } in dev to reset tables
     //await sequelize.sync({ force: true }); // ⚠️ This will drop and recreate all tables
+     console.log("✅ Database synced.");
+
 
 
     app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
   } catch (error) {
     console.error("Unable to connect to the database:", error);
+    console.error(error.name, error.message); // basic error info
+    console.error(error.stack);               // full stack trace
+    process.exit(1); // exit to ensure Railway shuts down cleanly
   }
 };
 
