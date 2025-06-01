@@ -24,12 +24,28 @@ dotenv.config();
 
 
 // for railway postgres db
+
+const isProduction = process.env.NODE_ENV === "production";
+
 const sequelize = new Sequelize(process.env.DATABASE_URL, {
   dialect: "postgres",
   logging: false,
-  dialectOptions: {
-    ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
-  }
+  dialectOptions: isProduction
+    ? {
+        ssl: {
+          require: true,
+          rejectUnauthorized: false,
+        },
+      }
+    : {},
 });
+
+// const sequelize = new Sequelize(process.env.DATABASE_URL, {
+//   dialect: "postgres",
+//   logging: false,
+//   dialectOptions: {
+//     ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+//   }
+// });
 
 export default sequelize;

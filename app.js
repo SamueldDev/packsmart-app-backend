@@ -1,11 +1,4 @@
 
-process.on('exit', (code) => {
-  console.log('👋 App is exiting with code:', code);
-});
-
-process.on('SIGTERM', () => {
-  console.log('❗ Received SIGTERM, shutting down...');
-});
 
 
 
@@ -56,18 +49,44 @@ const startServer = async () => {
 
 
     app.listen(PORT, () => 
-      console.log(`Server running on port ${PORT}`),
-      console.log("✅ Listening confirmed")
+      console.log(`Server running on port ${PORT}`));
+      // console.log("✅ Listening confirmed");
 
-  );
+      setInterval(() => {
+      console.log("⏳ App is still running...");
+    }, 15000);
+
+  
   } catch (error) {
     console.error("Unable to connect to the database:", error);
     console.error(error.name, error.message); // basic error info
     console.error(error.stack);               // full stack trace
     process.exit(1); // exit to ensure Railway shuts down cleanly
   }
+
+
 };
 
 startServer();
 
 export default app;
+
+
+
+
+process.on('exit', (code) => {
+  console.log('👋 App is exiting with code:', code);
+});
+
+process.on('SIGTERM', () => {
+  console.log('❗ Received SIGTERM, shutting down...');
+});
+
+
+process.on('uncaughtException', (err) => {
+  console.error('❌ Uncaught Exception:', err);
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  console.error('❌ Unhandled Rejection:', reason);
+});
