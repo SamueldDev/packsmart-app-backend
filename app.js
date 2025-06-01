@@ -45,8 +45,11 @@ const startServer = async () => {
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
 
-      // Run reminder job after DB sync
-    runReminderJob(); // 🟢 Will log reminders (or "no trips") after deploy
+      runReminderJob().catch((err) =>
+      console.error("Reminder job failed (non-blocking):", err)
+    );
+
+
   });
 
     // ✅ Keep app alive for debugging
