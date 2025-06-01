@@ -15,6 +15,7 @@ import { sequelize } from "./models/index.js";
 import usersRoutes from "./routes/usersRoutes.js";
 import tripRoutes from "./routes/tripRoutes.js";
 import checklistRoutes from "./routes/checklistRoutes.js";
+import runReminderJob from "./jobs/reminderJobs.js";
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -40,6 +41,9 @@ const startServer = async () => {
 
     await sequelize.sync({ alter: true });
     console.log("✅ Database synced.");
+
+    // Run reminder job after DB sync
+    await runReminderJob(); // 🟢 Will log reminders (or "no trips") after deploy
 
     app.listen(PORT, () =>
       console.log(`🚀 Server running on port ${PORT}`)
