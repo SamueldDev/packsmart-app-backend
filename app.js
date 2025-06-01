@@ -52,9 +52,9 @@ const startServer = async () => {
       console.log(`Server running on port ${PORT}`));
       // console.log("✅ Listening confirmed");
 
-      setInterval(() => {
-      console.log("⏳ App is still running...");
-    }, 15000);
+    //   setInterval(() => {
+    //   console.log("⏳ App is still running...");
+    // }, 15000);
 
   
   } catch (error) {
