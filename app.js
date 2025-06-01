@@ -25,6 +25,11 @@ app.use("/api/users", usersRoutes)
 app.use("/api/trips", tripRoutes)
 app.use("/api/checklists", checklistRoutes)
 
+// temporary test route for railway
+app.get("/", (req, res) => {
+  res.send("PackSmart API is Live")
+})
+
 
 // start server
 const startServer = async () => {
