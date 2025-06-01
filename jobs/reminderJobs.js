@@ -106,7 +106,7 @@ const runReminderJob = async () => {
     await sequelize.close();
   } catch (error) {
     console.error("Reminder job failed:", error);
-    process.exit(1);
+    // process.exit(1);
   }
 };
 

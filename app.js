@@ -1,7 +1,5 @@
 
 
-
-//first --ccc
 process.on("uncaughtException", (err) => {
   console.error("Uncaught Exception:", err);
 });
@@ -42,12 +40,14 @@ const startServer = async () => {
     await sequelize.sync({ alter: true });
     console.log("✅ Database synced.");
 
-    // Run reminder job after DB sync
-    await runReminderJob(); // 🟢 Will log reminders (or "no trips") after deploy
+    
 
-    app.listen(PORT, () =>
-      console.log(`🚀 Server running on port ${PORT}`)
-    );
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+
+      // Run reminder job after DB sync
+    runReminderJob(); // 🟢 Will log reminders (or "no trips") after deploy
+  });
 
     // ✅ Keep app alive for debugging
     setInterval(() => {
