@@ -1,5 +1,6 @@
 
 import express from "express";
+
 // import sequelize from "./config/db.js";
 import { sequelize } from "./models/index.js"
 

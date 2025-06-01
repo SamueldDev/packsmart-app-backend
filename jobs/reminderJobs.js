@@ -5,7 +5,9 @@
 
 import sequelize from "./config/db.js";
 
+// import Trip from "../models/TripModel.js";
 import Trip from "../models/TripModel.js";
+
 
 import User from "../models/userModel.js";
 
