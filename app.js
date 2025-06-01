@@ -1,4 +1,14 @@
 
+process.on('exit', (code) => {
+  console.log('👋 App is exiting with code:', code);
+});
+
+process.on('SIGTERM', () => {
+  console.log('❗ Received SIGTERM, shutting down...');
+});
+
+
+
 import express from "express";
 
 // import sequelize from "./config/db.js";
@@ -45,7 +55,11 @@ const startServer = async () => {
 
 
 
-    app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+    app.listen(PORT, () => 
+      console.log(`Server running on port ${PORT}`),
+      console.log("✅ Listening confirmed")
+
+  );
   } catch (error) {
     console.error("Unable to connect to the database:", error);
     console.error(error.name, error.message); // basic error info
