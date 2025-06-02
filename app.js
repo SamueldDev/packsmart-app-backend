@@ -9,6 +9,9 @@ process.on("unhandledRejection", (reason) => {
 });
 
 import express from "express";
+import dotenv from "dotenv";
+dotenv.config();
+
 import { sequelize } from "./models/index.js";
 import usersRoutes from "./routes/usersRoutes.js";
 import tripRoutes from "./routes/tripRoutes.js";
@@ -19,8 +22,6 @@ import sharinglistRoute from "./routes/sharinglistRoute.js"
 
 import authRoutes from "./routes/authRoutes.js";
 
-import dotenv from "dotenv";
-dotenv.config();
 
 
 const PORT = process.env.PORT || 5000;

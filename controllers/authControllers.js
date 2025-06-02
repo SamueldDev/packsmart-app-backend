@@ -4,6 +4,8 @@ import User from "../models/userModel.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
+
+
 export const register = async (req, res) => {
   try {
     const { fullname, email, password, phoneNumber } = req.body;
@@ -28,6 +30,7 @@ export const login = async (req, res) => {
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) return res.status(401).json({ message: "Invalid credentials" });
+    console.log("JWT_SECRET:", process.env.JWT_SECRET);
 
     const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "1d" });
 
