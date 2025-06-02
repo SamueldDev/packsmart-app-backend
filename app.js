@@ -16,6 +16,8 @@ import checklistRoutes from "./routes/checklistRoutes.js";
 import remainderjobsRoutes from "./routes/remainderjobsRoute.js"
 import sharedListRoutes from "./routes/sharedListRoutes.js";
 
+import authRoutes from "./routes/authRoutes.js";
+
 
 
 const PORT = process.env.PORT || 5000;
@@ -24,6 +26,7 @@ const app = express();
 app.use(express.json());
 
 // Routes
+app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/trips", tripRoutes);
 app.use("/api/checklists", checklistRoutes);
