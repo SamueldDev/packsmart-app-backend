@@ -13,7 +13,9 @@ import { sequelize } from "./models/index.js";
 import usersRoutes from "./routes/usersRoutes.js";
 import tripRoutes from "./routes/tripRoutes.js";
 import checklistRoutes from "./routes/checklistRoutes.js";
-// import runReminderJob from "./jobs/reminderJobs.js";
+import remainderjobsRoutes from "./routes/remainderjobsRoute.js"
+
+
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -24,6 +26,7 @@ app.use(express.json());
 app.use("/api/users", usersRoutes);
 app.use("/api/trips", tripRoutes);
 app.use("/api/checklists", checklistRoutes);
+app.use("/api/remainder", remainderjobsRoutes)
 
 // Test route
 app.get("/", (req, res) => {

@@ -69,16 +69,12 @@
 
 
 
-
-import sequelize from "../config/db.js"; // correct import path
 import Trip from "../models/TripModel.js";
 import User from "../models/userModel.js";
-import { Op } from "sequelize"; // ✅ correct Op usage
+import { Op } from "sequelize";
 
 const runReminderJob = async () => {
   try {
-    await sequelize.authenticate();
-
     const today = new Date();
     const inThreeDays = new Date(today);
     inThreeDays.setDate(today.getDate() + 3);
@@ -93,24 +89,18 @@ const runReminderJob = async () => {
     });
 
     if (upcomingTrips.length === 0) {
-      console.log("No upcoming trips in the next 3 days.");
+      console.log("📭 No upcoming trips in the next 3 days.");
     } else {
       for (const trip of upcomingTrips) {
         const user = trip.User;
         console.log(
-          `Reminder: Hi ${user.fullname}, your trip to ${trip.destination} starts on ${trip.startDate.toDateString()}!`
+          `📣 Reminder: Hi ${user.fullname}, your trip to ${trip.destination} starts on ${trip.startDate.toDateString()}!`
         );
       }
     }
-
-    // await sequelize.close();
   } catch (error) {
-    console.error("Reminder job failed:", error);
-    // process.exit(1);
+    console.error("❌ Reminder job failed:", error.message);
   }
 };
 
-export default runReminderJob; // ✅ for app testing route
-// runReminderJob(); <-- comment this if importing into app.js
-
-
+export default runReminderJob;
