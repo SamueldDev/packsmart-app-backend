@@ -2,25 +2,19 @@
 
 
 
-import express from "express";
-// import {
-//   createShareableLink,
-//   getSharedListByToken,
-//   revokeSharedList,
-// } from "../controllers/sharedListController.js";
+// import express from "express";
 
 
-import { 
-    createShareableLink,
-    getSharedListByToken,
-    revokeSharedList
+// import { 
+//     createShareableLink,
+//     getSharedListByToken,
+//     revokeSharedList
+//  } from "../controllers/sharinglistController";
 
- } from "../controllers/shareListController.js";
+// const router = express.Router();
 
-const router = express.Router();
+// router.post("/", createShareableLink);
+// router.get("/:token", getSharedListByToken);
+// router.delete("/:id", revokeSharedList);
 
-router.post("/", createShareableLink);
-router.get("/:token", getSharedListByToken);
-router.delete("/:id", revokeSharedList);
-
-export default router;
+// export default router;

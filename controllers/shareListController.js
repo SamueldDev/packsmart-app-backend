@@ -1,90 +1,90 @@
 
-//import SharedList from "../models/SharedListModel.js";
 
-import SharedList from "../models/SharedListModel.js";
-import Trip from "../models/TripModel.js";
-import User from "../models/userModel.js";
 
-import { generateShareToken } from "../utilis/generateShareLink.js";
+// import SharedList from "../models/SharedListModel.js";
+// import Trip from "../models/TripModel.js";
+// import User from "../models/userModel.js";
 
-export const createShareableLink = async (req, res) => {
-  try {
-    const { tripId, permission = "view", expiresAt } = req.body;
-    const sharedByUserId = req.user.id;
+// import { generateShareToken } from "../utilis/generateShareLink.js";
 
-    const trip = await Trip.findOne({ where: { id: tripId, userId: sharedByUserId } });
-    if (!trip) {
-      return res.status(404).json({ message: "Trip not found or not owned by user" });
-    }
+// export const createShareableLink = async (req, res) => {
+//   try {
+//     const { tripId, permission = "view", expiresAt } = req.body;
+//     const sharedByUserId = req.user.id;
 
-    const shareToken = generateShareToken();
+//     const trip = await Trip.findOne({ where: { id: tripId, userId: sharedByUserId } });
+//     if (!trip) {
+//       return res.status(404).json({ message: "Trip not found or not owned by user" });
+//     }
 
-    const sharedList = await SharedList.create({
-      tripId,
-      sharedByUserId,
-      shareToken,
-      permission,
-      expiresAt: expiresAt ? new Date(expiresAt) : null,
-    });
+//     const shareToken = generateShareToken();
 
-    const shareUrl = `${process.env.APP_BASE_URL}/shared/${shareToken}`;
+//     const sharedList = await SharedList.create({
+//       tripId,
+//       sharedByUserId,
+//       shareToken,
+//       permission,
+//       expiresAt: expiresAt ? new Date(expiresAt) : null,
+//     });
 
-    res.status(201).json({ message: "Shareable link created", shareUrl, sharedList });
-  } catch (error) {
-    console.error("Failed to create shareable link:", error);
-    res.status(500).json({ message: "Failed to create shareable link", error: error.message });
-  }
-};
+//     const shareUrl = `${process.env.APP_BASE_URL}/shared/${shareToken}`;
 
-export const getSharedListByToken = async (req, res) => {
-  try {
-    const { token } = req.params;
+//     res.status(201).json({ message: "Shareable link created", shareUrl, sharedList });
+//   } catch (error) {
+//     console.error("Failed to create shareable link:", error);
+//     res.status(500).json({ message: "Failed to create shareable link", error: error.message });
+//   }
+// };
 
-    const sharedList = await SharedList.findOne({
-      where: { shareToken: token },
-      include: [
-        {
-          model: Trip,
-          include: [{ model: User, attributes: ["fullname", "email"] }],
-        },
-      ],
-    });
+// export const getSharedListByToken = async (req, res) => {
+//   try {
+//     const { token } = req.params;
 
-    if (!sharedList) {
-      return res.status(404).json({ message: "Shared list not found" });
-    }
+//     const sharedList = await SharedList.findOne({
+//       where: { shareToken: token },
+//       include: [
+//         {
+//           model: Trip,
+//           include: [{ model: User, attributes: ["fullname", "email"] }],
+//         },
+//       ],
+//     });
 
-    if (sharedList.expiresAt && new Date() > sharedList.expiresAt) {
-      return res.status(410).json({ message: "Shareable link expired" });
-    }
+//     if (!sharedList) {
+//       return res.status(404).json({ message: "Shared list not found" });
+//     }
 
-    res.json({ sharedList });
-  } catch (error) {
-    console.error("Failed to fetch shared list:", error);
-    res.status(500).json({ message: "Failed to fetch shared list", error: error.message });
-  }
-};
+//     if (sharedList.expiresAt && new Date() > sharedList.expiresAt) {
+//       return res.status(410).json({ message: "Shareable link expired" });
+//     }
 
-export const revokeSharedList = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const userId = req.user.id;
+//     res.json({ sharedList });
+//   } catch (error) {
+//     console.error("Failed to fetch shared list:", error);
+//     res.status(500).json({ message: "Failed to fetch shared list", error: error.message });
+//   }
+// };
 
-    const sharedList = await SharedList.findOne({ where: { id } });
+// export const revokeSharedList = async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const userId = req.user.id;
 
-    if (!sharedList) {
-      return res.status(404).json({ message: "Shared list not found" });
-    }
+//     const sharedList = await SharedList.findOne({ where: { id } });
 
-    if (sharedList.sharedByUserId !== userId) {
-      return res.status(403).json({ message: "Unauthorized" });
-    }
+//     if (!sharedList) {
+//       return res.status(404).json({ message: "Shared list not found" });
+//     }
 
-    await sharedList.destroy();
+//     if (sharedList.sharedByUserId !== userId) {
+//       return res.status(403).json({ message: "Unauthorized" });
+//     }
 
-    res.json({ message: "Shared list revoked" });
-  } catch (error) {
-    console.error("Failed to revoke shared list:", error);
-    res.status(500).json({ message: "Failed to revoke shared list", error: error.message });
-  }
-};
+//     await sharedList.destroy();
+
+//     res.json({ message: "Shared list revoked" });
+//   } catch (error) {
+//     console.error("Failed to revoke shared list:", error);
+//     res.status(500).json({ message: "Failed to revoke shared list", error: error.message });
+//   }
+// };

@@ -14,10 +14,8 @@ import usersRoutes from "./routes/usersRoutes.js";
 import tripRoutes from "./routes/tripRoutes.js";
 import checklistRoutes from "./routes/checklistRoutes.js";
 import remainderjobsRoutes from "./routes/remainderjobsRoute.js"
-// import sharedListRoutes from "./routes/sharedListRoutes.js";
 
-import sharedListRoutes from "./routes/shareListRoutes.js"
-
+import sharinglistRoute from "./routes/sharinglistRoute"
 
 import authRoutes from "./routes/authRoutes.js";
 
@@ -34,7 +32,7 @@ app.use("/api/users", usersRoutes);
 app.use("/api/trips", tripRoutes);
 app.use("/api/checklists", checklistRoutes);
 app.use("/api/remainder", remainderjobsRoutes);
-app.use("/api/sharedlists", sharedListRoutes);
+app.use("/api/sharedlists", sharinglistRoute);
 
 // Test route
 app.get("/", (req, res) => {
