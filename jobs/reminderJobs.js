@@ -94,7 +94,7 @@ const runReminderJob = async () => {
       for (const trip of upcomingTrips) {
         const user = trip.User;
         console.log(
-          `📣 Reminder: Hi ${user.fullname}, your trip to ${trip.destination} starts on ${trip.startDate.toDateString()}!`
+          `📣 Reminder: Hi ${user.fullname}, your trip to ${trip.destination} starts on ${new Date(trip.startDate).toDateString()}!`
         );
       }
     }
