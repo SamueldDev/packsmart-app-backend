@@ -18,15 +18,18 @@ import tripRoutes from "./routes/tripRoutes.js";
 import checklistRoutes from "./routes/checklistRoutes.js";
 import remainderjobsRoutes from "./routes/remainderjobsRoute.js"
 
+import packingItemRoutes from "./routes/packingItemRoutes.js"
+
 import sharinglistRoute from "./routes/sharinglistRoute.js"
 
 import authRoutes from "./routes/authRoutes.js";
 
 
 
+
 const PORT = process.env.PORT || 5000;
 const app = express();
-
+  
 app.use(express.json());
 
 // Routes
@@ -36,6 +39,7 @@ app.use("/api/trips", tripRoutes);
 app.use("/api/checklists", checklistRoutes);
 app.use("/api/remainder", remainderjobsRoutes);
 app.use("/api/sharedlists", sharinglistRoute);
+app.use("/api/packingitems", packingItemRoutes);
 
 // Test route
 app.get("/", (req, res) => {

@@ -2,12 +2,16 @@
 
 
 import express from "express";
-import {
-  addPackingItem,
-  getPackingItems,
-  updatePackingItem,
-  deletePackingItem,
-} from "../controllers/packingItemController.js";
+
+import { 
+    addPackingItem,
+    getPackingItems,
+    updatePackingItem,
+    deletePackingItem
+
+ } from "../controllers/packingListController.js";
+
+
 import authenticate from "../middlewares/authMiddleware.js" // ensure user is logged in
 
 
