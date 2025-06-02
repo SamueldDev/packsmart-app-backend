@@ -13,7 +13,7 @@ import { sequelize } from "./models/index.js";
 import usersRoutes from "./routes/usersRoutes.js";
 import tripRoutes from "./routes/tripRoutes.js";
 import checklistRoutes from "./routes/checklistRoutes.js";
-import runReminderJob from "./jobs/reminderJobs.js";
+// import runReminderJob from "./jobs/reminderJobs.js";
 
 const PORT = process.env.PORT || 5000;
 const app = express();
@@ -45,9 +45,9 @@ const startServer = async () => {
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
 
-      runReminderJob().catch((err) =>
-      console.error("Reminder job failed (non-blocking):", err)
-    );
+    //   runReminderJob().catch((err) =>
+    //   console.error("Reminder job failed (non-blocking):", err)
+    // );
 
 
   });
