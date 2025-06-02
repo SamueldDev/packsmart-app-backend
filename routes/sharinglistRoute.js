@@ -7,7 +7,7 @@ import {
     createShareableLink,
     getSharedListByToken,
     revokeSharedList 
-} from "../controllers/sharinglistController";
+} from "../controllers/sharinglistController.js";
 
 const router = express.Router();
 

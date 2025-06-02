@@ -15,7 +15,7 @@ import tripRoutes from "./routes/tripRoutes.js";
 import checklistRoutes from "./routes/checklistRoutes.js";
 import remainderjobsRoutes from "./routes/remainderjobsRoute.js"
 
-import sharinglistRoute from "./routes/sharinglistRoute"
+import sharinglistRoute from "./routes/sharinglistRoute.js"
 
 import authRoutes from "./routes/authRoutes.js";
 
