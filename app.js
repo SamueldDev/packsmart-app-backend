@@ -14,7 +14,10 @@ import usersRoutes from "./routes/usersRoutes.js";
 import tripRoutes from "./routes/tripRoutes.js";
 import checklistRoutes from "./routes/checklistRoutes.js";
 import remainderjobsRoutes from "./routes/remainderjobsRoute.js"
-import sharedListRoutes from "./routes/sharedListRoutes.js";
+// import sharedListRoutes from "./routes/sharedListRoutes.js";
+
+import sharedListRoutes from "./routes/shareListRoutes.js"
+
 
 import authRoutes from "./routes/authRoutes.js";
 
@@ -30,7 +33,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
 app.use("/api/trips", tripRoutes);
 app.use("/api/checklists", checklistRoutes);
-app.use("/api/remainder", remainderjobsRoutes)
+app.use("/api/remainder", remainderjobsRoutes);
 app.use("/api/sharedlists", sharedListRoutes);
 
 // Test route
@@ -49,7 +52,7 @@ const startServer = async () => {
     // console.log("✅ Database synced.");
 
 
-    await sequelize.syn({ force: true});
+    await sequelize.sync({ force: true});
     console.log("all tables dropped and recreated")
 
     app.listen(PORT, () => {

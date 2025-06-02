@@ -7,7 +7,7 @@ import Checklist from "./checklistModel.js";
 import ChecklistItem from "./CheckListItemModel.js"
 
 import PackingItem from "./PackingItemModel.js";
-
+import Trip from "./TripModel.js";
 
 import User from "./userModel.js";
 
