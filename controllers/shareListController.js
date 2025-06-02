@@ -1,4 +1,6 @@
 
+//import SharedList from "../models/SharedListModel.js";
+
 import SharedList from "../models/SharedListModel.js";
 import Trip from "../models/TripModel.js";
 import User from "../models/userModel.js";

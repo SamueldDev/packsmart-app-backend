@@ -56,7 +56,7 @@ const startServer = async () => {
     console.log("all tables dropped and recreated")
 
     app.listen(PORT, () => {
-      console.log(`🚀 Server running on port ${PORT}`);
+      console.log(`🚀 Server running on port ${PORT}`); 
 
     //   runReminderJob().catch((err) =>
     //   console.error("Reminder job failed (non-blocking):", err)
