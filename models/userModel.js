@@ -23,6 +23,14 @@ User.init(
       allowNull: false,
       unique: true,
     },
+      phoneNumber: {
+      type: DataTypes.STRING,
+      allowNull: false, // all users MUST provide phoneNumber
+      validate: {
+        is: /^\+\d{10,15}$/i,
+      }
+    },
+
     preferences: {
       type: DataTypes.JSONB,
       allowNull: true,

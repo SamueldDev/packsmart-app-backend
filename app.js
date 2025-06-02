@@ -40,8 +40,11 @@ const startServer = async () => {
     await sequelize.authenticate();
     console.log("✅ Database connected successfully.");
 
-    await sequelize.sync({ alter: true });
-    console.log("✅ Database synced.");
+    // await sequelize.sync({ alter: true });
+    // console.log("✅ Database synced.");
+
+  await sequelize.sync({ force: true });
+  console.log("🔥 All tables dropped and recreated");
 
     
 
