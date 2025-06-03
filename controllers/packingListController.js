@@ -6,11 +6,32 @@ import Trip from "../models/TripModel.js";
 // ✅ Create a packing item
 export const addPackingItem = async (req, res) => {
   try {
-    const { tripId, name, quantity, category, note } = req.body;
+    const { tripId, items } = req.body;
 
     const trip = await Trip.findOne({ where: { id: tripId, userId: req.user.id } });
     if (!trip) {
       return res.status(404).json({ message: "Trip not found or not owned by user" });
+    }
+
+    if (Array.isArray(items)) {
+      const createdItems = await PackingItem.bulkCreate(
+        items.map((item) => ({
+          tripId,
+          name: item.name,
+          quantity: item.quantity || 1,
+          category: item.category || null,
+          note: item.note || null,
+        }))
+      );
+
+      return res.status(201).json({ message: "Packing items added", items: createdItems });
+    }
+
+    // fallback for single item
+    const { name, quantity, category, note } = req.body;
+
+    if (!name) {
+      return res.status(400).json({ message: "Item name is required" });
     }
 
     const item = await PackingItem.create({
@@ -22,10 +43,14 @@ export const addPackingItem = async (req, res) => {
     });
 
     res.status(201).json({ message: "Packing item added", item });
+
   } catch (error) {
-    res.status(500).json({ message: "Failed to add packing item", error: error.message });
+    res.status(500).json({ message: "Failed to add packing item(s)", error: error.message });
   }
 };
+
+
+
 
 // 📄 Get all packing items for a trip
 export const getPackingItems = async (req, res) => {

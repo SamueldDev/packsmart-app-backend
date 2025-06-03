@@ -45,7 +45,7 @@ app.use("/api/remainder", remainderjobsRoutes);
 app.use("/api/sharedlists", sharinglistRoute);
 app.use("/api/packingitems", packingItemRoutes);
 app.use("/api/templates", templatesRoute)
-app.use('/api/suggestions', suggestionRoutes);
+app.use('/api/suggestions', suggestionRoutes); 
 
 // Test route  
 app.get("/", (req, res) => {
@@ -68,12 +68,7 @@ const startServer = async () => {
 
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`); 
-
-    //   runReminderJob().catch((err) =>
-    //   console.error("Reminder job failed (non-blocking):", err)
-    // );
-
-
+   
   });
 
     // ✅ Keep app alive for debugging
