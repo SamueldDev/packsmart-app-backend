@@ -34,10 +34,16 @@ export const getTrips = async (req, res) => {
     }
 
      console.log("WHERE:", where);
-     console.log("Query Params:", req.query);
+    console.log("WHERE clause used:", JSON.stringify(where, null, 2));
+
+    
 
 
     const trips = await Trip.findAll();
+    
+    trips.forEach(t => {
+  console.log(`Trip: ${t.destination}, Start: ${t.startDate}, End: ${t.endDate}`);
+});
     res.json(trips);
   } catch (error) {
     console.error(error);
