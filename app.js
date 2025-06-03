@@ -22,6 +22,8 @@ import packingItemRoutes from "./routes/packingItemRoutes.js"
 
 import sharinglistRoute from "./routes/sharinglistRoute.js"
 
+import templatesRoute from "./routes/templatesRoutes.js"
+
 import authRoutes from "./routes/authRoutes.js";
 
 
@@ -35,11 +37,12 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/users", usersRoutes);
-app.use("/api/trips", tripRoutes);
+app.use("/api/trips", tripRoutes); 
 app.use("/api/checklists", checklistRoutes);
 app.use("/api/remainder", remainderjobsRoutes);
 app.use("/api/sharedlists", sharinglistRoute);
 app.use("/api/packingitems", packingItemRoutes);
+app.use("/api/templates", templatesRoute)
 
 // Test route
 app.get("/", (req, res) => {
