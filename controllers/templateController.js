@@ -6,6 +6,8 @@ import TemplateItem from "../models/TemplateItem.js";
 
 import PackingItem from "../models/PackingItemModel.js";
 
+import Trip from "../models/TripModel.js";
+
 
 export const getAllTemplates = async (req, res) => {
   try {
