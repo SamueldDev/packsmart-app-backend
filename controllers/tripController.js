@@ -23,11 +23,17 @@ export const getTrips = async (req, res) => {
      const { startDate, endDate } = req.query;
 
     const where = { userId: req.user.id };
+   
+
 
     if (startDate && endDate) {
       where.startDate = { [Op.gte]: startDate };
       where.endDate = { [Op.lte]: endDate };
     }
+
+     console.log("WHERE:", where);
+     console.log("Query Params:", req.query);
+
 
     const trips = await Trip.findAll();
     res.json(trips);
