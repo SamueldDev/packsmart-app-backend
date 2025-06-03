@@ -44,7 +44,7 @@ app.use("/api/sharedlists", sharinglistRoute);
 app.use("/api/packingitems", packingItemRoutes);
 app.use("/api/templates", templatesRoute)
 
-// Test route
+// Test route  
 app.get("/", (req, res) => {
   res.send("PackSmart API is Live"); 
 });

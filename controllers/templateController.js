@@ -27,11 +27,12 @@ export const getAllTemplates = async (req, res) => {
 
 export const copyTemplateToTrip = async (req, res) => {
   try {
-    const { templateId, tripId } = req.body;
+    const templateId = req.params.id; // from the URL
+    const { tripId } = req.body;      // from the request body
 
-    // Validate required input
-    if (!templateId || !tripId) {
-      return res.status(400).json({ message: "templateId and tripId are required" });
+    // Validate input
+    if (!tripId) {
+      return res.status(400).json({ message: "tripId is required" });
     }
 
     // Check if the template exists
@@ -40,16 +41,16 @@ export const copyTemplateToTrip = async (req, res) => {
       return res.status(404).json({ message: "Checklist template not found" });
     }
 
-    // Check if the trip exists and belongs to the user
+    // Check if the trip exists and belongs to the authenticated user
     const trip = await Trip.findOne({ where: { id: tripId, userId: req.user.id } });
     if (!trip) {
       return res.status(403).json({ message: "Trip not found or not owned by user" });
     }
 
-    // Get template items
+    // Fetch template items
     const items = await TemplateItem.findAll({ where: { templateId } });
 
-    // Transform for bulk creation
+    // Prepare items for insertion into user's trip
     const newItems = items.map((item) => ({
       name: item.name,
       quantity: item.quantity,
@@ -57,7 +58,7 @@ export const copyTemplateToTrip = async (req, res) => {
       tripId,
     }));
 
-    // Insert items into PackingItem
+    // Insert copied items
     await PackingItem.bulkCreate(newItems);
 
     res.status(201).json({ message: "Template items copied to trip successfully" });
