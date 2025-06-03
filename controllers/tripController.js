@@ -25,17 +25,14 @@ export const getTrips = async (req, res) => {
     const where = { userId: req.user.id };
    
 
-
       if (startDate && endDate) {
-      where[Op.and] = [
-        { startDate: { [Op.lte]: endDate } },   // Trip starts before or on the visible end
-        { endDate: { [Op.gte]: startDate } },   // Trip ends after or on the visible start
-      ];
+    where.startDate = { [Op.lte]: endDate };
+    where.endDate = { [Op.gte]: startDate };
     }
 
-     console.log("WHERE:", where);
-    console.log("WHERE clause used:", JSON.stringify(where, null, 2));
 
+     console.log("WHERE:", where);
+    
     
 
 
