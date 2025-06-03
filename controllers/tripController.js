@@ -40,7 +40,7 @@ export const getTrips = async (req, res) => {
 
 
     const trips = await Trip.findAll();
-    
+
     trips.forEach(t => {
   console.log(`Trip: ${t.destination}, Start: ${t.startDate}, End: ${t.endDate}`);
 });

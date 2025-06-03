@@ -74,7 +74,7 @@ const startServer = async () => {
     // ✅ Keep app alive for debugging
     setInterval(() => {
       console.log("⏳ App is still running...");
-    }, 10000);  
+    }, 10000);    
 
   } catch (error) {
     console.error("❌ Unable to connect to the database:", error);
