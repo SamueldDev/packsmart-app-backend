@@ -1,19 +1,12 @@
 
 import express from "express"
-import { getSuggestions } from "../services/suggestions.js";
+
+import { taggedSuggestions } from "../controllers/suggestionController.js";
+
+import authenticate from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post('/', (req, res) => {
-  const { destinationTypes } = req.body;
-
-  if (!Array.isArray(destinationTypes) || destinationTypes.length === 0) {
-    return res.status(400).json({ error: 'destinationTypes (array) is required' });
-  }
-
-  const suggestions = getSuggestions({ destinationTypes });
-
-  res.json({ suggestions });
-});
+router.post('/', authenticate, taggedSuggestions)
 
 export default router;
