@@ -14,6 +14,9 @@ import Trip from "./TripModel.js";
 
 import User from "./userModel.js";
 
+import TemplateItem from "./TemplateItem.js";
+import ChecklistTemplate from "./checklistTemplateModel.js";
+
 // Setup associations
 User.hasMany(Checklist, { foreignKey: "userId", onDelete: "CASCADE" });
 Checklist.belongsTo(User, { foreignKey: "userId" });
@@ -28,11 +31,13 @@ PackingItem.belongsTo(Trip, { foreignKey: "tripId" });
 
 
 
-// Trip.hasMany(PackingItem, { foreignKey: "tripId" });
-// PackingItem.belongsTo(Trip, { foreignKey: "tripId" });
-
 SharedList.belongsTo(Trip, { foreignKey: "tripId", as: "trip" });
-
 Trip.hasMany(SharedList, { foreignKey: "tripId", as: "sharedLists" });
 
-export { sequelize, Checklist, ChecklistItem, User, PackingItem };
+
+
+ChecklistTemplate.hasMany(TemplateItem, { foreignKey: "templateId", as: "items" });
+TemplateItem.belongsTo(ChecklistTemplate, { foreignKey: "templateId" });
+
+
+export { sequelize, Checklist, ChecklistItem, User, PackingItem, Trip, SharedList };

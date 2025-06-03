@@ -1,6 +1,5 @@
 
 
-//import Trip from "../models/TripModel.js";
 import Trip from "../models/TripModel.js";
 
 // Create a new trip
