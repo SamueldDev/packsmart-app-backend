@@ -49,7 +49,7 @@ app.use('/api/suggestions', suggestionRoutes);
 
 // Test route  
 app.get("/", (req, res) => {
-  res.send("PackSmart API is Live"); 
+  res.send("PackSmart API is Live");   
 });
 
 const startServer = async () => {

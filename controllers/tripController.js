@@ -2,6 +2,9 @@
 
 import Trip from "../models/TripModel.js";
 
+import { Op } from "sequelize";
+
+
 // Create a new trip
 export const createTrip = async (req, res) => {
   try {
@@ -17,6 +20,15 @@ export const createTrip = async (req, res) => {
 // Get all trips
 export const getTrips = async (req, res) => {
   try {
+     const { startDate, endDate } = req.query;
+
+    const where = { userId: req.user.id };
+
+    if (startDate && endDate) {
+      where.startDate = { [Op.gte]: startDate };
+      where.endDate = { [Op.lte]: endDate };
+    }
+
     const trips = await Trip.findAll();
     res.json(trips);
   } catch (error) {
