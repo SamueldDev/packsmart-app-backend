@@ -51,9 +51,10 @@ export const getSharedListByToken = async (req, res) => {
       include: [
         {
           model: Trip,
+          as : "trip",
           include: [
             { model: User, attributes: ["fullname", "email"] },
-            { model: PackingItem }, // ← Include packing items
+            { model: PackingItem, as: "items" }, // ← Include packing items
           ],
         },
       ],
