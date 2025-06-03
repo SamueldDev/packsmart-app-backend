@@ -6,7 +6,9 @@ import sequelize from "../config/db.js";
 import Checklist from "./checklistModel.js";
 import ChecklistItem from "./CheckListItemModel.js"
 
+
 import PackingItem from "./PackingItemModel.js";
+
 import Trip from "./TripModel.js";
 
 import User from "./userModel.js";
@@ -22,5 +24,12 @@ ChecklistItem.belongsTo(Checklist, { foreignKey: "checklistId" });
 
 Trip.hasMany(PackingItem, { foreignKey: "tripId", onDelete: "CASCADE" });
 PackingItem.belongsTo(Trip, { foreignKey: "tripId" });
+
+
+
+// Trip.hasMany(PackingItem, { foreignKey: "tripId" });
+// PackingItem.belongsTo(Trip, { foreignKey: "tripId" });
+
+
 
 export { sequelize, Checklist, ChecklistItem, User, PackingItem };
