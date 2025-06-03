@@ -9,10 +9,14 @@ import {
     revokeSharedList 
 } from "../controllers/sharinglistController.js";
 
+import authenticate from "../middlewares/authMiddleware.js";
+
 const router = express.Router();
 
-router.post("/", createShareableLink);
+router.post("/", authenticate, createShareableLink);
+
+router.delete("/:id", authenticate, revokeSharedList);
+
 router.get("/:token", getSharedListByToken);
-router.delete("/:id", revokeSharedList);
 
 export default router;
