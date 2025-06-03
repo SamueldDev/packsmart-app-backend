@@ -24,6 +24,8 @@ import sharinglistRoute from "./routes/sharinglistRoute.js"
 
 import templatesRoute from "./routes/templatesRoutes.js"
 
+import suggestionRoutes from "./routes/suggestionsRoutes.js"
+
 import authRoutes from "./routes/authRoutes.js";
 
 
@@ -43,6 +45,7 @@ app.use("/api/remainder", remainderjobsRoutes);
 app.use("/api/sharedlists", sharinglistRoute);
 app.use("/api/packingitems", packingItemRoutes);
 app.use("/api/templates", templatesRoute)
+app.use('/api/suggestions', suggestionRoutes);
 
 // Test route  
 app.get("/", (req, res) => {
