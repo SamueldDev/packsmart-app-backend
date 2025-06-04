@@ -1,9 +1,9 @@
-import User from '../models/userModel.js';
+import { User } from '../models/userModel.js';
 import { generateToken } from '../middlewares/authMiddleware.js';
 
 export const register = async (req, res, next) => {
   try {
-    const { email, password, firstName, lastName, preferences } = req.body;
+    const { email, password, name, preferences } = req.body;
 
     // Check if user already exists
     const existingUser = await User.findByEmail(email);
@@ -18,8 +18,7 @@ export const register = async (req, res, next) => {
     const user = await User.create({
       email,
       password,
-      firstName,
-      lastName,
+      name,
       preferences
     });
 
@@ -33,8 +32,7 @@ export const register = async (req, res, next) => {
         user: {
           id: user.id,
           email: user.email,
-          firstName: user.first_name,
-          lastName: user.last_name,
+          name: user.name,
           preferences: user.preferences
         },
         token
@@ -77,8 +75,7 @@ export const login = async (req, res, next) => {
         user: {
           id: user.id,
           email: user.email,
-          firstName: user.first_name,
-          lastName: user.last_name,
+          name: user.name,
           preferences: user.preferences
         },
         token
@@ -100,14 +97,13 @@ export const getProfile = async (req, res, next) => {
       });
     }
 
-    res.json({
+     res.json({
       success: true,
       data: {
         user: {
           id: user.id,
           email: user.email,
-          firstName: user.first_name,
-          lastName: user.last_name,
+          name: user.name,
           preferences: user.preferences,
           createdAt: user.created_at,
           updatedAt: user.updated_at
@@ -121,11 +117,10 @@ export const getProfile = async (req, res, next) => {
 
 export const updateProfile = async (req, res, next) => {
   try {
-    const { firstName, lastName, preferences } = req.body;
+    const { name, preferences } = req.body;
 
     const updatedUser = await User.updateById(req.user.id, {
-      firstName,
-      lastName,
+      name,
       preferences
     });
 
@@ -143,8 +138,7 @@ export const updateProfile = async (req, res, next) => {
         user: {
           id: updatedUser.id,
           email: updatedUser.email,
-          firstName: updatedUser.first_name,
-          lastName: updatedUser.last_name,
+          name: updatedUser.name,
           preferences: updatedUser.preferences,
           updatedAt: updatedUser.updated_at
         }
