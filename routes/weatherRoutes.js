@@ -5,11 +5,11 @@
 
 import express from "express";
 
-import { weatherForcast } from "../controllers/weatherController.js";
+import { weatherForecast } from "../controllers/weatherController.js";
 
 const router = express.Router(); 
 
 
-router.get("/", weatherForcast)
+router.get("/", weatherForecast)
 
 export default router

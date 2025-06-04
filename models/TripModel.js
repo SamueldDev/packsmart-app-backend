@@ -41,6 +41,9 @@ Trip.init(
     destinationCountry: {
       type: DataTypes.STRING,
       allowNull: true,
+      validate: {
+      len: [2, 2], // Expect ISO 2-letter country codes like 'US', 'ES', 'FR'
+  },
     },
 
     startDate: {
