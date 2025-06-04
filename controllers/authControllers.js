@@ -1,5 +1,5 @@
-import User from '../models/User.js';
-import { generateToken } from '../middleware/auth.js';
+import User from '../models/userModel.js';
+import { generateToken } from '../middlewares/authMiddleware.js';
 
 export const register = async (req, res, next) => {
   try {
