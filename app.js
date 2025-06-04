@@ -71,11 +71,11 @@ const startServer = async () => {
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`); 
    
-  });
+  });  
 
     // ✅ Keep app alive for debugging
     setInterval(() => {
-      console.log("⏳ App is still running...");
+      console.log("⏳ App is still running...");  
     }, 10000);    
 
   } catch (error) {

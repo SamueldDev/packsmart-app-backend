@@ -8,8 +8,8 @@ import { Op } from "sequelize";
 // Create a new trip
 export const createTrip = async (req, res) => {
   try {
-    const { userId, name, tripType, destination, startDate, endDate, duration, metadata } = req.body;
-    const newTrip = await Trip.create({ userId, name, tripType, destination, startDate, endDate, duration, metadata });
+    const { userId, name, tripType, destination, destinationCity, destinationCountry, startDate, endDate, duration, metadata } = req.body;
+    const newTrip = await Trip.create({ userId, name, tripType, destination, destinationCountry, destinationCity, startDate, endDate, duration, metadata });
     res.status(201).json(newTrip);
   } catch (error) {
     console.error(error);
