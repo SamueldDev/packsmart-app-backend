@@ -46,7 +46,7 @@ app.use("/api/remainder", remainderjobsRoutes);
 app.use("/api/sharedlists", sharinglistRoute);
 app.use("/api/packingitems", packingItemRoutes);
 app.use("/api/templates", templatesRoute)
-app.use('/api/suggestions', suggestionRoutes); 
+app.use('/api/suggestions', suggestionRoutes);  
 app.use("/api/weatheralert", weatherRoutes)
 
 // Test route  

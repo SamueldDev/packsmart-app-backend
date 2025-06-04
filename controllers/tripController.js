@@ -22,19 +22,14 @@ export const getTrips = async (req, res) => {
   try {
      const { startDate, endDate } = req.query;
 
-    const where = { userId: req.user.id };
+     const where = { userId: req.user.id };
    
-
       if (startDate && endDate) {
     where.startDate = { [Op.lte]: endDate };
     where.endDate = { [Op.gte]: startDate };
     }
 
-
      console.log("WHERE:", where);
-    
-    
-
 
     const trips = await Trip.findAll();
 
@@ -45,5 +40,29 @@ export const getTrips = async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Failed to fetch trips", error: error.message });
+  }
+};
+
+
+
+// get recent trips
+export const getRecentTrips = async (req, res) => {
+  const { userId, limit = 3 } = req.query;
+
+  if (!userId) {
+    return res.status(400).json({ error: 'userId is required' });
+  }
+
+  try {
+    const trips = await Trip.findAll({
+      where: { userId },
+      order: [['createdAt', 'DESC']],
+      limit: parseInt(limit, 10),
+    });
+
+    res.json({ recentTrips: trips });
+  } catch (error) {
+    console.error('Error fetching recent trips:', error);
+    res.status(500).json({ error: 'Failed to fetch recent trips' });
   }
 };
