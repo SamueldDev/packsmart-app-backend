@@ -32,6 +32,17 @@ Trip.init(
       type: DataTypes.STRING,
       allowNull: true,
     },
+
+    destinationCity: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    },
+
+    destinationCountry: {
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+
     startDate: {
       type: DataTypes.DATEONLY,
       allowNull: true,

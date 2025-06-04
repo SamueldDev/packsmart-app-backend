@@ -25,6 +25,7 @@ import sharinglistRoute from "./routes/sharinglistRoute.js"
 import templatesRoute from "./routes/templatesRoutes.js"
 
 import suggestionRoutes from "./routes/suggestionsRoutes.js"
+import weatherRoutes from "./routes/weatherRoutes.js"
 
 import authRoutes from "./routes/authRoutes.js";
 
@@ -46,6 +47,7 @@ app.use("/api/sharedlists", sharinglistRoute);
 app.use("/api/packingitems", packingItemRoutes);
 app.use("/api/templates", templatesRoute)
 app.use('/api/suggestions', suggestionRoutes); 
+app.use("/api/weatheralert", weatherRoutes)
 
 // Test route  
 app.get("/", (req, res) => {
@@ -78,7 +80,7 @@ const startServer = async () => {
 
   } catch (error) {
     console.error("❌ Unable to connect to the database:", error);
-    process.exit(1);  
+    process.exit(1);    
   }
 };
 
