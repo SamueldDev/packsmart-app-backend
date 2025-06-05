@@ -54,3 +54,9 @@ export const notFoundHandler = (req, res) => {
     message: `Route ${req.originalUrl} not found`
   });
 };
+
+export const asyncHandler = (fn) => {
+  return (req, res, next) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
+};
