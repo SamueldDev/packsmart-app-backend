@@ -1,12 +1,13 @@
 import { User } from '../models/userModel.js';
 import { generateToken } from '../middlewares/authMiddleware.js';
+import bcrypt from 'bcryptjs';
 
 export const register = async (req, res, next) => {
   try {
-    const { email, password, name, preferences } = req.body;
+    const { email, password, name, phoneNumber, preferences } = req.body;
 
     // Check if user already exists
-    const existingUser = await User.findByEmail(email);
+    const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(409).json({
         success: false,
@@ -14,15 +15,18 @@ export const register = async (req, res, next) => {
       });
     }
 
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 12);
+
     // Create new user
     const user = await User.create({
       email,
-      password,
+      password: hashedPassword,
       name,
+      phoneNumber,
       preferences
     });
 
-    // Generate token
     const token = generateToken(user.id);
 
     res.status(201).json({
@@ -33,6 +37,7 @@ export const register = async (req, res, next) => {
           id: user.id,
           email: user.email,
           name: user.name,
+          phoneNumber: user.phoneNumber,
           preferences: user.preferences
         },
         token
@@ -47,8 +52,7 @@ export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
 
-    // Find user by email
-    const user = await User.findByEmail(email);
+    const user = await User.findOne({ where: { email } });
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -56,8 +60,7 @@ export const login = async (req, res, next) => {
       });
     }
 
-    // Verify password
-    const isValidPassword = await User.verifyPassword(password, user.password);
+    const isValidPassword = await bcrypt.compare(password, user.password);
     if (!isValidPassword) {
       return res.status(401).json({
         success: false,
@@ -65,7 +68,6 @@ export const login = async (req, res, next) => {
       });
     }
 
-    // Generate token
     const token = generateToken(user.id);
 
     res.json({
@@ -76,6 +78,7 @@ export const login = async (req, res, next) => {
           id: user.id,
           email: user.email,
           name: user.name,
+          phoneNumber: user.phoneNumber,
           preferences: user.preferences
         },
         token
@@ -88,8 +91,8 @@ export const login = async (req, res, next) => {
 
 export const getProfile = async (req, res, next) => {
   try {
-    const user = await User.findById(req.user.id);
-    
+    const user = await User.findByPk(req.user.id);
+
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -97,16 +100,17 @@ export const getProfile = async (req, res, next) => {
       });
     }
 
-     res.json({
+    res.json({
       success: true,
       data: {
         user: {
           id: user.id,
           email: user.email,
           name: user.name,
+          phoneNumber: user.phoneNumber,
           preferences: user.preferences,
-          createdAt: user.created_at,
-          updatedAt: user.updated_at
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt
         }
       }
     });
@@ -119,28 +123,30 @@ export const updateProfile = async (req, res, next) => {
   try {
     const { name, preferences } = req.body;
 
-    const updatedUser = await User.updateById(req.user.id, {
-      name,
-      preferences
-    });
-
-    if (!updatedUser) {
+    const user = await User.findByPk(req.user.id);
+    if (!user) {
       return res.status(404).json({
         success: false,
         message: 'User not found'
       });
     }
 
+    if (name !== undefined) user.name = name;
+    if (preferences !== undefined) user.preferences = preferences;
+
+    await user.save();
+
     res.json({
       success: true,
       message: 'Profile updated successfully',
       data: {
         user: {
-          id: updatedUser.id,
-          email: updatedUser.email,
-          name: updatedUser.name,
-          preferences: updatedUser.preferences,
-          updatedAt: updatedUser.updated_at
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          phoneNumber: user.phoneNumber,
+          preferences: user.preferences,
+          updatedAt: user.updatedAt
         }
       }
     });
@@ -153,11 +159,9 @@ export const changePassword = async (req, res, next) => {
   try {
     const { currentPassword, newPassword } = req.body;
 
-    // Get user with password
-    const user = await User.findByEmail(req.user.email);
-    
-    // Verify current password
-    const isValidPassword = await User.verifyPassword(currentPassword, user.password);
+    const user = await User.findOne({ where: { email: req.user.email } });
+
+    const isValidPassword = await bcrypt.compare(currentPassword, user.password);
     if (!isValidPassword) {
       return res.status(400).json({
         success: false,
@@ -165,8 +169,9 @@ export const changePassword = async (req, res, next) => {
       });
     }
 
-    // Update password
-    await User.updatePassword(req.user.id, newPassword);
+    const hashedPassword = await bcrypt.hash(newPassword, 12);
+    user.password = hashedPassword;
+    await user.save();
 
     res.json({
       success: true,

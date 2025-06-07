@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import { sequelize } from './config/database.js';
 import { errorHandler, notFoundHandler } from './middlewares/errorHandler.js';
 import { generalLimiter } from './middlewares/rateLimiter.js';
 import dotenv from 'dotenv';
@@ -8,8 +9,8 @@ dotenv.config();
 const PORT = process.env.PORT || 3000;
 
 // Route imports
-import authRoutes from './routes/authRoutes.js';
-import tripRoutes from './routes/tripRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+// import tripRoutes from './routes/tripRoutes.js';
 // import packingListRoutes from './routes/packingListRoutes.js';
 // import itemRoutes from './routes/itemRoutes.js';
 // import suggestionRoutes from './routes/suggestionsRoutes.js';
@@ -30,8 +31,8 @@ app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true }));
 
 // Routes
-app.use('/api/auth', authRoutes);
-app.use('/api/trips', tripRoutes);
+app.use('/api/auth', userRoutes);
+// app.use('/api/trips', tripRoutes);
 // app.use('/api/lists', packingListRoutes);
 // app.use('/api', itemRoutes);
 // app.use('/api/suggestions', suggestionRoutes);
@@ -45,9 +46,14 @@ app.get('/health', (req, res) => {
 app.use(notFoundHandler);
 app.use(errorHandler);
 
-
-
-app.listen(PORT, () => {
-  console.log(`SmartPack API server running on port ${PORT}`);
-  console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
+sequelize
+  .sync({ alter: true })
+  .then(() => {
+   app.listen(PORT, () => {
+      console.log(`SmartPack API server running on port ${PORT}`);
+      console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
 });
+  })
+  .catch((err) => {
+    console.log("Error syncing database: ", err);
+  });

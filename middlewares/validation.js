@@ -10,7 +10,6 @@ function validateRequired(requiredFields, body) {
 
 // Helper to validate date format (YYYY-MM-DD)
 function validateDate(dateString) {
-  // Simple regex for YYYY-MM-DD
   return /^\d{4}-\d{2}-\d{2}$/.test(dateString);
 }
 
@@ -25,10 +24,14 @@ export const validateRequest = (req, res, next) => {
   next();
 };
 
+// ✅ User validation with phoneNumber
 export const validateUser = [
-  body('email').isEmail().normalizeEmail(),
-  body('password').isLength({ min: 6 }),
-  body('name').trim().isLength({ min: 2 }),
+  body('email').isEmail().withMessage('Invalid email').normalizeEmail(),
+  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  body('name').trim().isLength({ min: 2 }).withMessage('Name must be at least 2 characters'),
+  body('phoneNumber')
+    .matches(/^\+\d{10,15}$/)
+    .withMessage('Phone number must be in international format, e.g., +2348012345678'),
   validateRequest
 ];
 
@@ -51,13 +54,11 @@ export const validateTrip = (req, res, next) => {
   const { destination, start_date, end_date } = req.body;
   const errors = [];
 
-  // Check required fields
   const missing = validateRequired(['destination', 'start_date', 'end_date'], req.body);
   if (missing.length > 0) {
     errors.push(`Missing required fields: ${missing.join(', ')}`);
   }
 
-  // Validate dates
   if (start_date && !validateDate(start_date)) {
     errors.push('Invalid start date format');
   }

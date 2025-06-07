@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { register, login, getProfile, updateProfile } from '../controllers/authControllers.js';
+import { register, login, getProfile, updateProfile } from '../controllers/userControllers.js';
 import { authenticateToken } from '../middlewares/authMiddleware.js';
 import { validateRequest, validateUser } from '../middlewares/validation.js';
 import { authLimiter } from '../middlewares/rateLimiter.js';
