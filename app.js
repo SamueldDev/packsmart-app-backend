@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 
 // Route imports
 import userRoutes from './routes/userRoutes.js';
-// import tripRoutes from './routes/tripRoutes.js';
+import tripRoutes from './routes/tripRoutes.js';
 // import packingListRoutes from './routes/packingListRoutes.js';
 // import itemRoutes from './routes/itemRoutes.js';
 // import suggestionRoutes from './routes/suggestionsRoutes.js';
@@ -32,7 +32,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Routes
 app.use('/api/auth', userRoutes);
-// app.use('/api/trips', tripRoutes);
+app.use('/api/trips', tripRoutes);
 // app.use('/api/lists', packingListRoutes);
 // app.use('/api', itemRoutes);
 // app.use('/api/suggestions', suggestionRoutes);

@@ -1,107 +1,137 @@
-// import { Trip } from '../models/tripModel.js';
-// import { asyncHandler } from '../middlewares/errorHandler.js';
+import { Trip } from '../models/tripModel.js';
+import { asyncHandler } from '../middlewares/errorHandler.js';
+import { Op } from 'sequelize';
 
-// export const createTrip = asyncHandler(async (req, res) => {
-//   const { destination, start_date, end_date, purpose, notes } = req.body;
+// Create a new trip
+export const createTrip = asyncHandler(async (req, res) => {
+  const { destination, start_date, end_date, purpose, tripType } = req.body;
 
-//   const trip = await Trip.create({
-//     user_id: req.user.id,
-//     destination,
-//     start_date,
-//     end_date,
-//     purpose,
-//     notes
-//   });
+  const trip = await Trip.create({
+    user_id: req.user.id,
+    destination,
+    start_date,
+    end_date,
+    purpose,
+    tripType,
+  });
 
-//   res.status(201).json({
-//     message: 'Trip created successfully',
-//     trip
-//   });
-// });
+  res.status(201).json({
+    message: 'Trip created successfully',
+    trip
+  });
+});
 
-// export const getAllTrips = asyncHandler(async (req, res) => {
-//   const trips = await Trip.findByUserId(req.user.id);
+// Get all trips for a user
+export const getAllTrips = asyncHandler(async (req, res) => {
+  const trips = await Trip.findAll({
+    where: { user_id: req.user.id },
+    order: [['start_date', 'DESC']]
+  });
 
-//   res.json({
-//     trips,
-//     count: trips.length
-//   });
-// });
+  res.json({
+    trips,
+    count: trips.length
+  });
+});
 
-// export const getTripById = asyncHandler(async (req, res) => {
-//   const { id } = req.params;
-  
-//   const trip = await Trip.findById(id, req.user.id);
+// Get a single trip by ID
+export const getTripById = asyncHandler(async (req, res) => {
+  const { id } = req.params;
 
-//   if (!trip) {
-//     return res.status(404).json({ error: 'Trip not found' });
-//   }
+  const trip = await Trip.findOne({
+    where: { id, user_id: req.user.id }
+  });
 
-//   res.json({ trip });
-// });
+  if (!trip) {
+    return res.status(404).json({ error: 'Trip not found' });
+  }
 
-// export const updateTrip = asyncHandler(async (req, res) => {
-//   const { id } = req.params;
-//   const { destination, start_date, end_date, purpose, notes } = req.body;
+  res.json({ trip });
+});
 
-//   const trip = await Trip.update(id, req.user.id, {
-//     destination,
-//     start_date,
-//     end_date,
-//     purpose,
-//     notes
-//   });
+// Update a trip
+export const updateTrip = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const { destination, start_date, end_date, purpose, tripType } = req.body;
 
-//   if (!trip) {
-//     return res.status(404).json({ error: 'Trip not found' });
-//   }
+  const trip = await Trip.findOne({
+    where: { id, user_id: req.user.id }
+  });
 
-//   res.json({
-//     message: 'Trip updated successfully',
-//     trip
-//   });
-// });
+  if (!trip) {
+    return res.status(404).json({ error: 'Trip not found' });
+  }
 
-// export const deleteTrip = asyncHandler(async (req, res) => {
-//   const { id } = req.params;
+  await trip.update({
+    destination,
+    start_date,
+    end_date,
+    purpose,
+    tripType
+  });
 
-//   const trip = await Trip.delete(id, req.user.id);
+  res.json({
+    message: 'Trip updated successfully',
+    trip
+  });
+});
 
-//   if (!trip) {
-//     return res.status(404).json({ error: 'Trip not found' });
-//   }
+// Delete a trip
+export const deleteTrip = asyncHandler(async (req, res) => {
+  const { id } = req.params;
 
-//   res.json({
-//     message: 'Trip deleted successfully',
-//     trip
-//   });
-// });
+  const trip = await Trip.findOne({
+    where: { id, user_id: req.user.id }
+  });
 
-// export const getUpcomingTrips = asyncHandler(async (req, res) => {
-//   const trips = await Trip.getUpcoming(req.user.id);
+  if (!trip) {
+    return res.status(404).json({ error: 'Trip not found' });
+  }
 
-//   res.json({
-//     trips,
-//     count: trips.length
-//   });
-// });
+  await trip.destroy();
 
-// export const getTripStats = asyncHandler(async (req, res) => {
-//   const allTrips = await Trip.findByUserId(req.user.id);
-//   const upcomingTrips = await Trip.getUpcoming(req.user.id);
-  
-//   const now = new Date();
-//   const pastTrips = allTrips.filter(trip => new Date(trip.end_date) < now);
-//   const currentTrips = allTrips.filter(trip => 
-//     new Date(trip.start_date) <= now && new Date(trip.end_date) >= now
-//   );
+  res.json({
+    message: 'Trip deleted successfully',
+    trip
+  });
+});
 
-//   res.json({
-//     stats: {
-//       total: allTrips.length,
-//       upcoming: upcomingTrips.length,
-//       current: currentTrips.length,
-//       past: pastTrips.length
-//     }
-//   });
-// });
+// Get upcoming trips
+export const getUpcomingTrips = asyncHandler(async (req, res) => {
+  const trips = await Trip.findAll({
+    where: {
+      user_id: req.user.id,
+      start_date: { [Op.gte]: new Date() }
+    },
+    order: [['start_date', 'ASC']]
+  });
+
+  res.json({
+    trips,
+    count: trips.length
+  });
+});
+
+// Get trip statistics
+export const getTripStats = asyncHandler(async (req, res) => {
+  const allTrips = await Trip.findAll({
+    where: { user_id: req.user.id }
+  });
+
+  const now = new Date();
+
+  const pastTrips = allTrips.filter(trip => new Date(trip.end_date) < now);
+  const currentTrips = allTrips.filter(trip =>
+    new Date(trip.start_date) <= now && new Date(trip.end_date) >= now
+  );
+  const upcomingTrips = allTrips.filter(trip => new Date(trip.start_date) > now);
+
+  res.json({
+    stats: {
+      total: allTrips.length,
+      upcoming: upcomingTrips.length,
+      current: currentTrips.length,
+      past: pastTrips.length
+    }
+  });
+});

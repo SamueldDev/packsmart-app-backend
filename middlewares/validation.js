@@ -51,7 +51,7 @@ export const validateListItem = [
 ];
 
 export const validateTrip = (req, res, next) => {
-  const { destination, start_date, end_date } = req.body;
+  const { start_date, end_date } = req.body;
   const errors = [];
 
   const missing = validateRequired(['destination', 'start_date', 'end_date'], req.body);
