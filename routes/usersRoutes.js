@@ -3,7 +3,6 @@
 import express from "express";
 
 import { createUser, loginUser } from "../controllers/userControllers.js";
-// import {registerValidator, loginValidator} from "../validators/authValidator.js"
 import { registerValidator, validationResultMiddleware, loginValidator } from "../middlewares/validateMiddleware.js"
 
 
