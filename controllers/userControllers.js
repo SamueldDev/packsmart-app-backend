@@ -95,12 +95,12 @@ export const loginUser = async (req, res) => {
 
 
 // Get all users
-export const getUsers = async (req, res) => {
-  try {
-    const users = await User.findAll();
-    res.json(users);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to fetch users", error: error.message });
-  }
-};
+// export const getUsers = async (req, res) => {
+//   try {
+//     const users = await User.findAll();
+//     res.json(users);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ message: "Failed to fetch users", error: error.message });
+//   }
+// };
