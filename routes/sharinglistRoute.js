@@ -11,13 +11,13 @@ import {
 
 import { sharedListRateLimiter } from "../middlewares/rateLimiterMiddleware.js";
 
-import authenticate from "../middlewares/authMiddleware.js";
+// import authenticate from "../middlewares/authMiddleware.js";
 
 const router = express.Router();
 
-router.post("/", authenticate, createShareableLink);
+router.post("/",  createShareableLink);
 
-router.delete("/:id", authenticate, revokeSharedList);
+router.delete("/:id", revokeSharedList);
 
 router.get("/:token", sharedListRateLimiter, getSharedListByToken);
 

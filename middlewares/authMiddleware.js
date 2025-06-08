@@ -1,24 +1,35 @@
 
-
+import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
-import User from "../models/userModel.js";
 
-const authenticate = async (req, res, next) => {
-  const authHeader = req.headers.authorization;
+dotenv.config();
 
-  if (!authHeader?.startsWith("Bearer ")) {
-    return res.status(401).json({ message: "Unauthorized" });
+export const protectedAction = (req, res, next) => {
+  const { authorization } = req.headers;
+
+  console.log("Authorization: ", authorization);
+  if (!authorization) {
+    return res.status(401).json({
+      status: false,
+      message: "Unauthorized",
+      data: [],
+    });
   }
 
-  const token = authHeader.split(" ")[1];
+  const token = authorization.split(" ")[1];
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = await User.findByPk(decoded.id);
+  jwt.verify(token, process.env.JWT_SECRET, function (err, decoded) {
+    if (err) {
+      return res.status(401).json({
+        status: false,
+        message: "Unauthorized",
+        data: [],
+      });
+    }
+
+    req.user = decoded.payload;
     next();
-  } catch (err) {
-    res.status(403).json({ message: "Invalid or expired token" });
-  }
-};
+  });
 
-export default authenticate;
+
+};

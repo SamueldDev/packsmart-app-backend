@@ -15,7 +15,7 @@ User.init(
       defaultValue: DataTypes.UUIDV4,
       primaryKey: true,
     },
-      fullname: {
+      name: {
       type: DataTypes.STRING,
       allowNull: false,
     },
@@ -48,12 +48,7 @@ User.init(
     modelName: "User", 
     tableName: "users",
     timestamps: true,
-    hooks: {
-      beforeCreate: async (user) => {
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(user.password, salt);
-      },
-    },
+
   }
 );
 

@@ -27,7 +27,7 @@ import templatesRoute from "./routes/templatesRoutes.js"
 import suggestionRoutes from "./routes/suggestionsRoutes.js"
 import weatherRoutes from "./routes/weatherRoutes.js"
 
-import authRoutes from "./routes/authRoutes.js";
+//  import authRoutes from "./routes/authRoutes.js";
 
 
 
@@ -38,8 +38,9 @@ const app = express();
 app.use(express.json());
 
 // Routes
-app.use("/api/auth", authRoutes);
-app.use("/api/users", usersRoutes);
+// app.use("/api/auth", authRoutes);  
+
+app.use("/api/user", usersRoutes);  
 app.use("/api/trips", tripRoutes); 
 app.use("/api/checklists", checklistRoutes);
 app.use("/api/remainder", remainderjobsRoutes);
@@ -61,17 +62,17 @@ const startServer = async () => {
     await sequelize.authenticate();
     console.log("✅ Database connected successfully.");
 
-    await sequelize.sync({ alter: true });
-    console.log("✅ Database synced.");
+    // await sequelize.sync({ alter: true });
+    // console.log("✅ Database synced.");
 
 
-    // await sequelize.sync({ force: true});
-    // console.log("all tables dropped and recreated") 
+    await sequelize.sync({ force: true});
+    console.log("all tables dropped and recreated") 
 
-    app.listen(PORT, () => {
+    app.listen(PORT, () => {   
       console.log(`🚀 Server running on port ${PORT}`); 
    
-  });  
+  });      
 
     // ✅ Keep app alive for debugging
     // setInterval(() => {
