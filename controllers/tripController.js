@@ -8,8 +8,9 @@ import { Op } from "sequelize";
 // Create a new trip
 export const createTrip = async (req, res) => {
   try {
-    const { userId, name, tripType, destination, destinationCity, destinationCountry, startDate, endDate, duration, metadata } = req.body;
-    const newTrip = await Trip.create({ userId, name, tripType, destination, destinationCountry, destinationCity, startDate, endDate, duration, metadata });
+    const userId = req.user.id
+    const { name, destination, tripType, destinationCity, destinationCountry, startDate, endDate, duration, metadata } = req.body;
+    const newTrip = await Trip.create({ userId, name, destination, tripType, destinationCountry, destinationCity, startDate, endDate, duration, metadata });
     res.status(201).json(newTrip);
   } catch (error) {
     console.error(error);
@@ -22,20 +23,21 @@ export const getTrips = async (req, res) => {
   try {
      const { startDate, endDate } = req.query;
 
-     const where = { userId: req.user.id };
+    const userId = req.user.id
+
+    const where = { userId };
+
    
-      if (startDate && endDate) {
+    if (startDate && endDate) {
     where.startDate = { [Op.lte]: endDate };
     where.endDate = { [Op.gte]: startDate };
     }
 
-     console.log("WHERE:", where);
+    console.log("WHERE:", where);
 
-    const trips = await Trip.findAll();
+    const trips = await Trip.findAll({ where });
 
-    trips.forEach(t => {
-  console.log(`Trip: ${t.destination}, Start: ${t.startDate}, End: ${t.endDate}`);
-});
+   
     res.json(trips);
   } catch (error) {
     console.error(error);
@@ -47,7 +49,8 @@ export const getTrips = async (req, res) => {
 
 // get recent trips
 export const getRecentTrips = async (req, res) => {
-  const { userId, limit = 3 } = req.query;
+  const userId = req.user.id
+  const limit = parseInt(req.query.limit, 10) || 3; 
 
   if (!userId) {
     return res.status(400).json({ error: 'userId is required' });
@@ -57,7 +60,7 @@ export const getRecentTrips = async (req, res) => {
     const trips = await Trip.findAll({
       where: { userId },
       order: [['createdAt', 'DESC']],
-      limit: parseInt(limit, 10),
+      limit,
     });
 
     res.json({ recentTrips: trips });
@@ -66,3 +69,22 @@ export const getRecentTrips = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch recent trips' });
   }
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+ //     trips.forEach(t => {
+    //     console.log(`Trip: ${t.destination}, Start: ${t.startDate}, End: ${t.endDate}`);
+
+    // });
+
+

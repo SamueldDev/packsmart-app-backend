@@ -30,17 +30,17 @@ Trip.init(
     },
     destination: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
     },
 
     destinationCity: {
     type: DataTypes.STRING,
-    allowNull: true,
+    allowNull: false,
     },
 
     destinationCountry: {
       type: DataTypes.STRING,
-      allowNull: true,
+      allowNull: false,
       validate: {
       len: [2, 2], // Expect ISO 2-letter country codes like 'US', 'ES', 'FR'
   },
@@ -48,11 +48,11 @@ Trip.init(
 
     startDate: {
       type: DataTypes.DATEONLY,
-      allowNull: true,
+      allowNull: false,
     },
     endDate: {
       type: DataTypes.DATEONLY,
-      allowNull: true,
+      allowNull: false,
     },
     duration: {
       type: DataTypes.INTEGER,
