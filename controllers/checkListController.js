@@ -4,26 +4,12 @@ import Checklist from "../models/checklistModel.js";
 import ChecklistItem from "../models/CheckListItemModel.js";
 import User from "../models/userModel.js";
 import sequelize from "../config/db.js";
-
-// GET all pre-made checklists (no userId, isPreMade: true)
-export const getPreMadeChecklists = async (req, res) => {
-  const { tripType } = req.query; // e.g. ?tripType=Vacation
-  const whereClause = { isPreMade: true };
-  if (tripType) whereClause.tripType = tripType;
-
-  try {
-    const checklists = await Checklist.findAll({
-      where: whereClause,
-      include: [ChecklistItem],
-    });
-    res.json(checklists);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+import Trip from "../models/TripModel.js";
 
 
-// Optional route: POST /api/checklists/premade (admin use)
+
+
+//  POST /api/checklists/premade (admin use)
 export const createPreMadeChecklist = async (req, res) => {
   const { name, tripType, items } = req.body;
   try {
@@ -47,12 +33,83 @@ export const createPreMadeChecklist = async (req, res) => {
 };
 
 
+// GET all pre-made checklists (no userId, isPreMade: true)
+export const getPreMadeChecklists = async (req, res) => {
+  const { tripType } = req.query; // e.g. ?tripType=Vacation
+  const whereClause = { isPreMade: true };
+  if (tripType) whereClause.tripType = tripType;
+
+  try {
+    const checklists = await Checklist.findAll({
+      where: whereClause,
+      include: [ChecklistItem],
+    });
+    res.json(checklists);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+// copyPremade checklist to user checklists
+export const copyPreMadeChecklist = async (req, res) => {
+  const checklistId = req.params.id;
+  const { tripId } = req.body;
+
+  try {
+    // Check trip ownership
+    const trip = await Trip.findOne({ where: { id: tripId, userId: req.user.id } });
+    if (!trip) {
+      return res.status(404).json({ message: "Trip not found or not owned by user" });
+    }
+
+    // Find the pre-made checklist
+    const preMade = await Checklist.findOne({
+      where: { id: checklistId, isPreMade: true },
+      include: [ChecklistItem],
+    });
+
+    if (!preMade) {
+      return res.status(404).json({ message: "Pre-made checklist not found" });
+    }
+
+    // Copy checklist into user's account (not isPreMade)
+    const userChecklist = await Checklist.create({
+      userId: req.user.id,
+      name: preMade.name,
+      tripType: preMade.tripType,
+      destination: trip.destination,
+      startDate: trip.startDate,
+      endDate: trip.endDate,
+      duration: trip.duration,
+      isPreMade: false,
+    });
+
+    // Copy items
+    const copiedItems = preMade.ChecklistItems.map((item) => ({
+      item: item.item,
+      checklistId: userChecklist.id,
+    }));
+
+    await ChecklistItem.bulkCreate(copiedItems);
+
+    res.status(201).json({ message: "Checklist copied", checklist: userChecklist });
+  } catch (error) {
+    console.error("Failed to copy checklist", error);
+    res.status(500).json({ message: "Failed to copy checklist", error: error.message });
+  }
+};
+
+
 
 
 // CREATE a custom checklist for a user
 export const createCustomChecklist = async (req, res) => {
+
+  const userId = req.user.id;
   const {
-    userId,
+  
     name,
     tripType,
     destination,
@@ -112,7 +169,10 @@ export const createCustomChecklist = async (req, res) => {
 
 // GET custom checklists by user
 export const getUserChecklists = async (req, res) => {
-  const { userId } = req.params;
+  // const { userId } = req.params;
+
+  const userId = req.user.id;
+
   try {
     const checklists = await Checklist.findAll({
       where: { userId, isPreMade: false },
@@ -143,10 +203,27 @@ export const toggleChecklistItem = async (req, res) => {
 
 // DELETE a custom checklist
 export const deleteChecklist = async (req, res) => {
+  const userId = req.user.id;
   const { checklistId } = req.params;
+
   try {
-    await Checklist.destroy({ where: { id: checklistId } });
+     const checklist = await Checklist.findByPk(checklistId);
+
+    if (!checklist) {
+      return res.status(404).json({ message: "Checklist not found" });
+    }
+
+    // Check ownership
+    if (checklist.userId !== userId) {
+      return res.status(403).json({ message: "Not authorized to delete this checklist" });
+    }
+
+    await checklist.destroy();
     res.json({ message: "Checklist deleted" });
+
+    // await Checklist.destroy({ where: { id: checklistId } });
+    // res.json({ message: "Checklist deleted" });
+
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -155,7 +232,9 @@ export const deleteChecklist = async (req, res) => {
 
 // get smart suggestion
 export const getSmartSuggestions = async (req, res) => {
-  const { userId } = req.params;
+
+  // const { userId } = req.params;
+  const userId = req.user.id;
   const { tripType } = req.query;
 
   try {

@@ -4,7 +4,7 @@
 import { DataTypes, Model } from "sequelize";
 
 import sequelize from "../config/db.js";
-import bcrypt from "bcrypt";
+
 
 class User extends Model {}
 
@@ -41,6 +41,11 @@ User.init(
       type: DataTypes.JSONB,
       allowNull: true,
       // store user preferences here as JSON object
+    },
+     role: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      defaultValue: 'user', // Can also be 'admin'
     },
   },
   {

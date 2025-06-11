@@ -25,7 +25,7 @@ import sharinglistRoute from "./routes/sharinglistRoute.js"
 
 import templatesRoute from "./routes/templatesRoutes.js"
 
-import suggestionRoutes from "./routes/suggestionsRoutes.js"
+import suggestionRoutes from "./routes/suggestionsRoutes.js"  
 import weatherRoutes from "./routes/weatherRoutes.js"
 
 
@@ -38,7 +38,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/api/user", usersRoutes);  
+app.use("/api/user", usersRoutes);    
 app.use("/api/trips", tripRoutes); 
 app.use("/api/checklists", checklistRoutes);
 app.use("/api/remainder", remainderjobsRoutes);
@@ -50,12 +50,12 @@ app.use("/api/weatheralert", weatherRoutes)
 
 // Test route  
 app.get("/", (req, res) => {  
-  res.send("PackSmart  API is Live");         
+  res.send("PackSmart  API is Live");             
 });
 
 const startServer = async () => {       
   try {
-    console.log("🔄 Attempting to connect to the database...");
+    console.log("🔄 Attemptinng to connect to the database...");
 
     await sequelize.authenticate();
     console.log("✅ Database connected successfully.");   

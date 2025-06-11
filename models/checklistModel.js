@@ -53,11 +53,13 @@ Checklist.init(
   }
 );
 
+export default Checklist;
+
 // One user can have many custom checklists
 // User.hasMany(Checklist, { foreignKey: "userId", onDelete: "CASCADE" });
 // Checklist.belongsTo(User, { foreignKey: "userId" });
 
-export default Checklist;
+
 
 
 

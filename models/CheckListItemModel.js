@@ -40,6 +40,9 @@ ChecklistItem.init(
   }
 );
 
+
+export default ChecklistItem;
+
 // One checklist can have many items
 
 // ChecklistItem.belongsTo(Checklist, { foreignKey: "checklistId" });
@@ -80,4 +83,4 @@ ChecklistItem.init(
 
 
 
-export default ChecklistItem;
+
