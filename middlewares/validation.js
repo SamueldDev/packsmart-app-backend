@@ -24,7 +24,6 @@ export const validateRequest = (req, res, next) => {
   next();
 };
 
-// ✅ User validation with phoneNumber
 export const validateUser = [
   body('email').isEmail().withMessage('Invalid email').normalizeEmail(),
   body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
@@ -35,14 +34,14 @@ export const validateUser = [
   validateRequest
 ];
 
-export const validateList = [
+export const validatePackingList = [
   body('name').trim().isLength({ min: 1 }),
   body('tripType').optional().isIn(['work', 'vacation', 'business', 'adventure', 'family']),
   body('destination').optional().trim(),
   validateRequest
 ];
 
-export const validateListItem = [
+export const validatePackingItem = [
   body('name').trim().isLength({ min: 1 }),
   body('category').optional().trim(),
   body('weight').optional().isNumeric(),
