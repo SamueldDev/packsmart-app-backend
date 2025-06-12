@@ -53,6 +53,11 @@ app.get("/", (req, res) => {
   res.send("PackSmart  API is Live");           
 });
 
+   app.listen(PORT, () => {   
+      console.log(`🚀 Server running on port ${PORT}`); 
+   
+  }); 
+
 const startServer = async () => {       
   try {
     console.log("🔄 Attemptinnng to connect to the database...");
@@ -67,10 +72,7 @@ const startServer = async () => {
     // await sequelize.sync({ force: true});
     // console.log("all tables dropped and recreated")   
 
-    app.listen(PORT, () => {   
-      console.log(`🚀 Server running on port ${PORT}`); 
-   
-  });      
+      
 
     // ✅ Keep app alive for debugging
     // setInterval(() => {
