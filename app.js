@@ -56,10 +56,16 @@ app.get("/", (req, res) => {
 console.log("💡 Binding to port:", PORT);
 
 
-   app.listen(PORT, () => {   
-      console.log(`🚀 Server running on port ${PORT}`); 
+  //  app.listen(PORT, () => {   
+  //     console.log(`🚀 Server running on port ${PORT}`); 
    
-  }); 
+  // }); 
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`🚀 Server running on port ${PORT}`);
+});
+
+
 
 const startServer = async () => {       
   try {
