@@ -1,12 +1,12 @@
 
 
-process.on("uncaughtException", (err) => {
-  console.error("Uncaught Exception:", err);
-});
+// process.on("uncaughtException", (err) => {
+//   console.error("Uncaught Exception:", err);
+// });
 
-process.on("unhandledRejection", (reason) => {
-  console.error("Unhandled Rejection:", reason);
-});
+// process.on("unhandledRejection", (reason) => {
+//   console.error("Unhandled Rejection:", reason);
+// });
 
 import express from "express";
 import dotenv from "dotenv";
@@ -53,6 +53,9 @@ app.get("/", (req, res) => {
   res.send("PackSmart  API is Live");           
 });
 
+console.log("💡 Binding to port:", PORT);
+
+
    app.listen(PORT, () => {   
       console.log(`🚀 Server running on port ${PORT}`); 
    
@@ -81,7 +84,7 @@ const startServer = async () => {
 
   } catch (error) {
     console.error("❌ Unable to connect to the database:", error);
-    process.exit(1);    
+    // process.exit(1);    
   }
 };
 
