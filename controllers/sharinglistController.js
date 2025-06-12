@@ -31,7 +31,7 @@ export const createShareableLink = async (req, res) => {
       expiresAt: expiresAt ? new Date(expiresAt) : null,
     });
 
-    const shareUrl = `${process.env.APP_BASE_URL}/shared/${shareToken}`;
+    const shareUrl = `${process.env.APP_BASE_URL}/api/sharedlists/${shareToken}`;
 
     res.status(201).json({ message: "Shareable link created", shareUrl, sharedList });
   } catch (error) {
@@ -51,7 +51,7 @@ export const getSharedListByToken = async (req, res) => {
           model: Trip,
           as : "trip",
           include: [
-            { model: User, attributes: ["fullname", "email"] },
+            { model: User, attributes: ["name", "email"] },
             { model: PackingItem, as: "items" }, // Include packing items
           ],
         },

@@ -38,7 +38,7 @@ app.use(cors());
 app.use(express.json());
 
 // Routes
-app.use("/api/user", usersRoutes);    
+app.use("/api/user", usersRoutes);      
 app.use("/api/trips", tripRoutes); 
 app.use("/api/checklists", checklistRoutes);
 app.use("/api/remainder", remainderjobsRoutes);
@@ -50,7 +50,7 @@ app.use("/api/weatheralert", weatherRoutes)
 
 // Test route  
 app.get("/", (req, res) => {  
-  res.send("PackSmart  API is Live");   
+  res.send("PackSmart  API is Live");           
 });
 
 const startServer = async () => {       
@@ -60,8 +60,8 @@ const startServer = async () => {
     await sequelize.authenticate();
     console.log("✅ Database connected successfully.");   
 
-    await sequelize.sync({ alter: true });  
-    console.log("✅ Database synced.");  
+    await sequelize.sync({ alter: true });   
+    console.log("✅ Database synced.");     
 
 
     // await sequelize.sync({ force: true});

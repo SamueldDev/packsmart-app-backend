@@ -11,6 +11,7 @@ import {
 
  } from "../controllers/packingListController.js";
 
+ import { protectedAction } from "../middlewares/authMiddleware.js" 
 
 // import authenticate from "../middlewares/authMiddleware.js" // ensure user is logged in
 
@@ -18,19 +19,19 @@ import {
 const router = express.Router();
 
 // ✅ POST /api/packing-items — Add a new item
-router.post("/",  addPackingItem);
+router.post("/", protectedAction,  addPackingItem);
 
 
 // 📄 GET /api/packing-items/:tripId — Get all items for a trip
-router.get("/:tripId",  getPackingItems);
+router.get("/:tripId", protectedAction,  getPackingItems);
 
 
 // 🖊️ PUT /api/packing-items/:id — Update a packing item
-router.put("/:id",  updatePackingItem);
+router.put("/:id", protectedAction,  updatePackingItem);
 
 
 // ❌ DELETE /api/packing-items/:id — Delete a packing item
-router.delete("/:id",  deletePackingItem);
+router.delete("/:id", protectedAction,  deletePackingItem);
 
 
 export default router;
