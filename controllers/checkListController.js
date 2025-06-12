@@ -5,6 +5,8 @@ import ChecklistItem from "../models/CheckListItemModel.js";
 import User from "../models/userModel.js";
 import sequelize from "../config/db.js";
 import Trip from "../models/TripModel.js";
+import { Op } from "sequelize";
+import PackingItem from "../models/PackingItemModel.js";
 
 
 
@@ -100,6 +102,8 @@ export const copyPreMadeChecklist = async (req, res) => {
     res.status(500).json({ message: "Failed to copy checklist", error: error.message });
   }
 };
+
+
 
 
 
@@ -228,6 +232,179 @@ export const deleteChecklist = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+
+
+
+// cloning the  checklist
+export const cloneChecklist = async (req, res) => {
+  const userId = req.user.id;
+  const { checklistId } = req.params;
+  const { name } = req.body;
+
+  const t = await sequelize.transaction();
+
+  try {
+    const original = await Checklist.findOne({
+      where: { id: checklistId, userId },
+      include: [ChecklistItem],
+    });
+
+    if (!original) {
+      await t.rollback();
+      return res.status(404).json({ message: "Original checklist not found" });
+    }
+
+    // Step 1: Clone checklist
+    const clonedChecklist = await Checklist.create({
+      userId,
+      name: name || `${original.name} (Copy)`,
+      tripType: original.tripType,
+      destination: original.destination,
+      duration: original.duration,
+      startDate: original.startDate,
+      endDate: original.endDate,
+      isPreMade: false,
+    }, { transaction: t });
+
+    // Step 2: Clone items
+    const clonedItems = original.ChecklistItems.map(item => ({
+      item: item.item,
+      checklistId: clonedChecklist.id,
+    }));
+
+    await ChecklistItem.bulkCreate(clonedItems, { transaction: t });
+
+    await t.commit();
+
+    res.status(201).json({
+      message: "Checklist cloned",
+      checklist: clonedChecklist,
+    });
+
+  } catch (error) {
+    await t.rollback();
+    res.status(500).json({ message: error.message });
+  }
+};
+
+
+
+
+// load checklistitems into packingitems
+// export const useChecklist = async (req, res) => {
+//   const userId = req.user.id;
+//   const checklistId = req.params.id;
+//   const { tripId } = req.body;
+
+//   try {
+//     // 1. Verify that the trip belongs to the user
+//     const trip = await Trip.findOne({ where: { id: tripId, userId } });
+//     if (!trip) {
+//       return res.status(404).json({ message: "Trip not found or not owned by user" });
+//     }
+
+//     // 2. Fetch the checklist (must be pre-made or user's custom)
+//     const checklist = await Checklist.findByPk(checklistId, {
+//       include: [ChecklistItem],
+//     });
+
+//     if (!checklist) {
+//       return res.status(404).json({ message: "Checklist not found" });
+//     }
+
+//     // 3. Convert checklist items to packing items
+//     const packingItemsToCreate = checklist.ChecklistItems.map((item) => ({
+//       tripId,
+//       name: item.item, // or `item.name` depending on your model
+//       quantity: 1, // default quantity
+//       category: null,
+//       note: null,
+//     }));
+
+//     const createdItems = await PackingItem.bulkCreate(packingItemsToCreate);
+
+//     res.status(201).json({
+//       message: "Checklist items copied to packing list",
+//       items: createdItems,
+//     });
+
+//   } catch (error) {
+//     console.error("Failed to copy checklist to packing items:", error);
+//     res.status(500).json({ message: "Failed to copy checklist", error: error.message });
+//   }
+// };
+
+
+
+//debuggign the loader
+export const useChecklist = async (req, res) => {
+  const userId = req.user.id;
+  const checklistId = req.params.checklistId
+  const { tripId } = req.body;
+
+  try {
+
+    // console.log("🔍 Received request to use checklist:", checklistId);
+    // console.log("👤 User ID:", userId);
+    // console.log("🧳 Trip ID:", tripId);
+
+    // 1. Verify that the trip belongs to the user
+    const trip = await Trip.findOne({ where: { id: tripId, userId } });
+    if (!trip) {
+      console.log("❌ Trip not found or not owned by user");
+      return res.status(404).json({ message: "Trip not found or not owned by user" });
+    }
+
+    // 2. Fetch the checklist (must be pre-made or user's custom)
+    const checklist = await Checklist.findOne({
+      where: {
+        id: checklistId,
+        [Op.or]: [
+          { userId },         // user's custom checklist
+          { isPreMade: true } // public checklist
+        ]
+      },
+      include: [ChecklistItem],
+    });
+
+    if (!checklist) {
+      console.log("❌ Checklist not found for user or not pre-made");
+      return res.status(404).json({ message: "Checklist not found" });
+    }
+
+    console.log("✅ Found checklist:", checklist.name || checklist.id);
+
+    // 3. Convert checklist items to packing items
+    const packingItemsToCreate = checklist.ChecklistItems.map((item) => ({
+      tripId,
+      name: item.item || item.name, // adapt depending on your model
+      quantity: 1,
+      category: null,
+      note: null,
+    }));
+
+    const createdItems = await PackingItem.bulkCreate(packingItemsToCreate);
+
+    console.log("📦 Created packing items:", createdItems.length);
+
+    res.status(201).json({
+      message: "Checklist items copied to packing list",
+      items: createdItems,
+    });
+
+  } catch (error) {
+    console.error("🚨 Failed to copy checklist to packing items:", error);
+    res.status(500).json({ message: "Failed to copy checklist", error: error.message });
+  }
+};
+
+
+
+
+
+
+
 
 
 // get smart suggestion

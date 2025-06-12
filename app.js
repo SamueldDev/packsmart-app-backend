@@ -50,12 +50,12 @@ app.use("/api/weatheralert", weatherRoutes)
 
 // Test route  
 app.get("/", (req, res) => {  
-  res.send("PackSmart  API is Live");             
+  res.send("PackSmart  API is Live");   
 });
 
 const startServer = async () => {       
   try {
-    console.log("🔄 Attemptinng to connect to the database...");
+    console.log("🔄 Attemptinnng to connect to the database...");
 
     await sequelize.authenticate();
     console.log("✅ Database connected successfully.");   
