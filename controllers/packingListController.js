@@ -53,16 +53,48 @@ export const addPackingItem = async (req, res) => {
 
 
 // 📄 Get all packing items for a trip
+// export const getPackingItems = async (req, res) => {
+//   try {
+//     const { tripId } = req.params;
+
+//     const items = await PackingItem.findAll({ where: { tripId } });
+//     res.json({ items });
+//   } catch (error) {
+//     res.status(500).json({ message: "Failed to fetch packing items", error: error.message });
+//   }
+// };
+
+
+
+// 📄 Get all packing items for a trip + packing progress
 export const getPackingItems = async (req, res) => {
   try {
     const { tripId } = req.params;
 
     const items = await PackingItem.findAll({ where: { tripId } });
-    res.json({ items });
+
+    const total = items.length;
+    const packedCount = items.filter(item => item.packed).length;
+    const progress = total === 0 ? 0 : Math.round((packedCount / total) * 100);
+
+    res.json({
+      items,
+      total,
+      packedCount,
+      unpackedCount: total - packedCount,
+      progressPercent: progress,
+    });
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch packing items", error: error.message });
   }
 };
+
+
+
+
+
+
+
 
 // 🖊️ Update a packing item (name, quantity, packed, etc.)
 export const updatePackingItem = async (req, res) => {
@@ -81,6 +113,12 @@ export const updatePackingItem = async (req, res) => {
     res.status(500).json({ message: "Failed to update item", error: error.message });
   }
 };
+
+
+
+
+
+
 
 // ❌ Delete a packing item
 export const deletePackingItem = async (req, res) => {
