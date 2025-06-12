@@ -1,13 +1,13 @@
 
 
-import express from "express"
+// import express from "express"
 
-import { getAllTemplates, copyTemplateToTrip } from "../controllers/templateController.js";
-// import authenticate from "../middlewares/authMiddleware.js";
+// import { getAllTemplates, copyTemplateToTrip } from "../controllers/templateController.js";
+// // import authenticate from "../middlewares/authMiddleware.js";
 
-const router = express.Router();
+// const router = express.Router();
 
-router.get("/", getAllTemplates);
-router.post("/:id/copy",  copyTemplateToTrip);
+// router.get("/", getAllTemplates);
+// router.post("/:id/copy",  copyTemplateToTrip);
 
-export default router;
+// export default router;
