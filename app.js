@@ -82,6 +82,9 @@
 
 
 import express from 'express';
+ import dotenv from "dotenv";
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -90,8 +93,10 @@ app.get('/', (req, res) => {
   res.send('Hello from PackSmart!');
 });
 
+
+console.log("✅ Reached before listen(), PORT:", PORT);
 app.listen(PORT, '0.0.0.0', () => {
-  console.log(`✅ Server is listening on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
 
 
