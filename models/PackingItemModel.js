@@ -17,6 +17,15 @@ PackingItem.init(
       type: DataTypes.UUID,
       allowNull: false,
     },
+    userId: {
+      type: DataTypes.UUID,
+      allowNull: false,
+      references: {
+      model: 'users', // make sure this matches your actual user table
+      key: 'id'
+        }
+      },
+
     name: {
       type: DataTypes.STRING,
       allowNull: false,

@@ -7,7 +7,8 @@ import {
     addPackingItem,
     getPackingItems,
     updatePackingItem,
-    deletePackingItem
+    deletePackingItem,
+    createPackingItemsBulk
 
  } from "../controllers/packingListController.js";
 
@@ -32,6 +33,10 @@ router.put("/:id", protectedAction,  updatePackingItem);
 
 // ❌ DELETE /api/packing-items/:id — Delete a packing item
 router.delete("/:id", protectedAction,  deletePackingItem);
+
+
+router.post("/bulk", protectedAction, createPackingItemsBulk)
+
 
 
 export default router;

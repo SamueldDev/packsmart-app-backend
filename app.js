@@ -39,7 +39,7 @@ app.use("/api/packingitems", packingItemRoutes);
 /// app.use("/api/templates", templatesRoute)
 
 app.use('/api/suggestions', suggestionRoutes);  
-app.use("/api/weatheralert", weatherRoutes)
+app.use("/api/weatheralert", weatherRoutes)  
 
 // Test route  
 app.get("/", (req, res) => {  
@@ -49,14 +49,12 @@ app.get("/", (req, res) => {
 console.log("💡 Binding to port:", PORT);
 
 
-app.listen(PORT, '0.0.0.0', () => {
-  console.log(`🚀 Server running on port ${PORT}`);
-});
+
 
 
 const startServer = async () => {       
   try {
-    console.log("🔄 Attemptinnng to connect to the database...");
+    console.log("🔄 Attempting to connect to the database...");
 
     await sequelize.authenticate();
     console.log("✅ Database connected successfully.");   
@@ -67,6 +65,10 @@ const startServer = async () => {
 
     // await sequelize.sync({ force: true});
     // console.log("all tables dropped and recreated")   
+
+    app.listen(PORT, () => {
+      console.log(`🚀 Server running on port ${PORT}`);
+    });
     
 
   } catch (error) {

@@ -52,19 +52,6 @@ export const addPackingItem = async (req, res) => {
 
 
 
-// 📄 Get all packing items for a trip
-// export const getPackingItems = async (req, res) => {
-//   try {
-//     const { tripId } = req.params;
-
-//     const items = await PackingItem.findAll({ where: { tripId } });
-//     res.json({ items });
-//   } catch (error) {
-//     res.status(500).json({ message: "Failed to fetch packing items", error: error.message });
-//   }
-// };
-
-
 
 // 📄 Get all packing items for a trip + packing progress
 export const getPackingItems = async (req, res) => {
@@ -136,3 +123,76 @@ export const deletePackingItem = async (req, res) => {
     res.status(500).json({ message: "Failed to delete item", error: error.message });
   }
 };
+
+
+
+
+
+
+
+
+
+// bulk items create from tags destination
+export const createPackingItemsBulk = async (req, res) => {
+  const { tripId, items } = req.body;
+  const userId = req.user.id;
+
+  if (!tripId || !Array.isArray(items) || items.length === 0) {
+    return res.status(400).json({ error: "tripId and items[] are required" });
+  }
+
+  const trip = await Trip.findOne({ where: { id: tripId, userId } });
+  if (!trip) {
+    return res.status(404).json({ error: "Trip not found or not yours" });
+  }
+
+  try {
+    // Normalize input items: trim + lowercase
+    const normalizedItems = items.map(name => name.trim().toLowerCase());
+
+    // Fetch ALL existing items for this trip (not just matching)
+    const existingItems = await PackingItem.findAll({
+      where: {
+        tripId,
+        userId
+      }
+    });
+
+    // Normalize existing item names for comparison
+    const existingNames = new Set(
+      existingItems.map(item => item.name.trim().toLowerCase())
+    );
+
+    // Filter out duplicates (case-insensitive)
+    const uniqueItems = items.filter(name => {
+      const lowerName = name.trim().toLowerCase();
+      return !existingNames.has(lowerName);
+    });
+
+    if (uniqueItems.length === 0) {
+      return res.status(200).json({ message: "All items already exist (case-insensitive)", added: [] });
+    }
+
+    // Prepare and insert new items (keep original casing in DB)
+    const recordsToInsert = uniqueItems.map(name => ({
+      name: name.trim(),
+      isPacked: false,
+      tripId,
+      userId
+    }));
+
+    const createdItems = await PackingItem.bulkCreate(recordsToInsert);
+
+    return res.status(201).json({
+      message: `${createdItems.length} item(s) added`,
+      added: createdItems
+    });
+
+  } catch (err) {
+    console.error(err);
+    return res.status(500).json({ error: "Failed to create packing items" });
+  }
+};
+
+
+

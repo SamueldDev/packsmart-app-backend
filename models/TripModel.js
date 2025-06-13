@@ -28,6 +28,11 @@ Trip.init(
       type: DataTypes.STRING,
       allowNull: false,
     },
+    tags: {
+      type: DataTypes.ARRAY(DataTypes.STRING),
+      allowNull: true,
+      defaultValue: []
+    },
     destination: {
       type: DataTypes.STRING,
       allowNull: false,
