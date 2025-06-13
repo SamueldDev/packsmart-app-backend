@@ -9,6 +9,7 @@ import usersRoutes from "./routes/usersRoutes.js";
 import tripRoutes from "./routes/tripRoutes.js";
 import checklistRoutes from "./routes/checklistRoutes.js";
 import remainderjobsRoutes from "./routes/remainderjobsRoute.js"
+import runReminderJob from "./jobs/reminderJobs.js";
 
 import packingItemRoutes from "./routes/packingItemRoutes.js"
 
@@ -18,6 +19,7 @@ import sharinglistRoute from "./routes/sharinglistRoute.js"
 
 import suggestionRoutes from "./routes/suggestionsRoutes.js"  
 import weatherRoutes from "./routes/weatherRoutes.js"
+import cron from "node-cron"
 
 
 
@@ -46,21 +48,16 @@ app.get("/", (req, res) => {
   res.send("PackSmart  API is Live");           
 });
 
-console.log("💡 Binding to port:", PORT);
-
-
-
-
 
 const startServer = async () => {       
   try {
-    console.log("🔄 Attempting to connect to the database...");
+    console.log("🔄 Attempting to connect to the database..");
 
     await sequelize.authenticate();
     console.log("✅ Database connected successfully.");   
 
     await sequelize.sync({ alter: true });   
-    console.log("✅ Database synced.");     
+    console.log("✅ Database synced.");      
 
 
     // await sequelize.sync({ force: true});
@@ -69,7 +66,13 @@ const startServer = async () => {
     app.listen(PORT, () => {
       console.log(`🚀 Server running on port ${PORT}`);
     });
-    
+
+    // Schedule to run every day at midnight (00:00)
+    cron.schedule("*/1 * * * *", async () => {
+      console.log("⏰ Running scheduled trip reminder job...");
+      await runReminderJob();
+    });
+
 
   } catch (error) {
     console.error("❌ Unable to connect to the database:", error);
@@ -78,6 +81,8 @@ const startServer = async () => {
 };
 
 startServer();
+
+
 
 export default app;
 

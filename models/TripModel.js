@@ -33,6 +33,10 @@ Trip.init(
       allowNull: true,
       defaultValue: []
     },
+      reminderSent: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
     destination: {
       type: DataTypes.STRING,
       allowNull: false,
