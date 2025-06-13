@@ -12,5 +12,3 @@
 
 // export default router;
 
-// psql postgresql://postgres_packsmart_user:An52n6bVpovWF0MevwP7DNdSTyG5Dv3Y@dpg-d15ksbemcj7s73brbha0-a.oregon-postgres.render.com/postgres_packsmart  -f path/to/dump.sql
-//   \q
