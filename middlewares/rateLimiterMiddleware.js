@@ -9,3 +9,14 @@ export const sharedListRateLimiter = rateLimit({
     message: "Too many requests from this IP, please try again later",
   },
 });
+
+
+
+export const forgotLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,   // 1 hour
+  max: 5,                     // limit each IP to 5 requests
+  message:
+    "Too many password‑reset requests from this IP. Try again in an hour."
+});
+
+

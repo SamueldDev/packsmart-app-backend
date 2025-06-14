@@ -9,17 +9,18 @@ import usersRoutes from "./routes/usersRoutes.js";
 import tripRoutes from "./routes/tripRoutes.js";
 import checklistRoutes from "./routes/checklistRoutes.js";
 import remainderjobsRoutes from "./routes/remainderjobsRoute.js"
-import runReminderJob from "./jobs/reminderJobs.js";
+// import runReminderJob from "./jobs/reminderJobs.js";
 
 import packingItemRoutes from "./routes/packingItemRoutes.js"
 
 import sharinglistRoute from "./routes/sharinglistRoute.js"
+import authRoute from "./routes/authRoute.js"
 
 // import templatesRoute from "./routes/templatesRoutes.js"
 
 import suggestionRoutes from "./routes/suggestionsRoutes.js"  
 import weatherRoutes from "./routes/weatherRoutes.js"
-import cron from "node-cron"
+// import cron from "node-cron"
 
 
 
@@ -37,6 +38,7 @@ app.use("/api/checklists", checklistRoutes);
 app.use("/api/remainder", remainderjobsRoutes);
 app.use("/api/sharedlists", sharinglistRoute);
 app.use("/api/packingitems", packingItemRoutes);
+app.use("/api/auth", authRoute)
 
 /// app.use("/api/templates", templatesRoute)
 
@@ -51,7 +53,7 @@ app.get("/", (req, res) => {
 
 const startServer = async () => {       
   try {
-    console.log("🔄 Attempting to connect to the database..");
+    console.log("🔄 Attembmpting to connect to the database..");
 
     await sequelize.authenticate();
     console.log("✅ Database connected successfully.");   
@@ -68,13 +70,14 @@ const startServer = async () => {
     });
 
     // Schedule to run every day at midnight (00:00)
-    cron.schedule("*/1 * * * *", async () => {
-      console.log("⏰ Running scheduled trip reminder job...");
-      await runReminderJob();
-    });
+    // cron.schedule("*/1 * * * *", async () => {
+    //   // console.log("run every one minute after develoment")
+    //   console.log("⏰ Running scheduled trip reminder job...");
+    //   await runReminderJob();
+    // });
 
 
-  } catch (error) {
+  } catch (error) {  
     console.error("❌ Unable to connect to the database:", error);
     // process.exit(1);    
   }

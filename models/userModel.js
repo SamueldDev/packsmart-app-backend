@@ -47,6 +47,14 @@ User.init(
       allowNull: false,
       defaultValue: 'user', // Can also be 'admin'
     },
+    resetPasswordToken: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    resetPasswordExpires: {
+      type: DataTypes.DATE,
+      allowNull: true
+    }
   },
   {
     sequelize,

@@ -2,7 +2,7 @@
 
 import express from "express";
 
-import { createUser, loginUser } from "../controllers/userControllers.js";
+import { createUser, loginUser} from "../controllers/userControllers.js";
 import { registerValidator, validationResultMiddleware, loginValidator } from "../middlewares/validateMiddleware.js"
 
 
@@ -10,6 +10,10 @@ const router = express.Router();
 
 router.post("/register", registerValidator, validationResultMiddleware,  createUser)
 router.post("/login", loginValidator, validationResultMiddleware, loginUser)
+
+
+
+
 // router.get("/", getUsers)
 
 export default router
