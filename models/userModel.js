@@ -28,6 +28,22 @@ export const User = sequelize.define('User', {
     is: /^\+\d{10,15}$/,
   }
   },
+   profilePicture: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  resetPasswordToken: {
+    type: DataTypes.STRING,
+    allowNull: true
+  },
+  resetPasswordExpires: {
+    type: DataTypes.DATE,
+    allowNull: true
+  },
+  isEmailVerified: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false
+  },
   preferences: {
     type: DataTypes.JSONB,
     allowNull: true

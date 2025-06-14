@@ -5,6 +5,10 @@
 - POST /api/auth/login - User login
 - GET /api/auth/profile - Get user profile (protected)
 - PUT /api/auth/profile - Update user profile (protected)
+- PATCH /api/auth/change-password - Change password of user (protected)
+- POST /api/auth/forgot-password - Send a token to reset password (protected)
+- PATCH /api/auth/reset-password/:token - Reset password of user (protected)
+- PATCH /api/auth/profile-picture - Upload a profile picture (protected)
 
 
 ### Trips
