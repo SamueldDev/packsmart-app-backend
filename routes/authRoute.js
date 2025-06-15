@@ -11,7 +11,7 @@ const router = express.Router()
 router.post("/forgot-password", forgotLimiter, forgotPassword)
 router.post("/reset-password/:token", resetPassword)
 
-router.post("/change-password", protectedAction, changePassword)
+router.put("/change-password", protectedAction, changePassword)
 
 
 

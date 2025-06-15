@@ -100,31 +100,6 @@ export const loginUser = async (req, res) => {
 // upload a picture adnd change profile image
 import cloudinary from "../config/cloudinary.js";
 
-// export const uploadProfileImage = async (req, res) => {
-//   try {
-//     const user = await User.findByPk(req.user.id);
-
-//     if (!req.file) {
-//       return res.status(400).json({ message: "No image uploaded" });
-//     }
-
-//     // Delete old image from Cloudinary
-//     if (user.cloudinaryPublicId) {
-//       await cloudinary.uploader.destroy(user.cloudinaryPublicId);
-//     }
-
-//     // Save new image details
-//     user.profileImage = req.file.path; // Cloudinary URL
-//     user.cloudinaryPublicId = req.file.filename; // unique Cloudinary ID
-//     await user.save();
-
-//     res.json({ message: "Profile image updated", imageUrl: user.profileImage });
-//   } catch (error) {
-//     console.error("Image Upload Error:", error);
-//     res.status(500).json({ message: "Failed to upload image" });
-//   }
-// };
-
 import streamifier from "streamifier"
 
 export const uploadProfileImage = async (req, res) => {
