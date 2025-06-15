@@ -172,7 +172,10 @@ export const uploadProfileImage = async (req, res) => {
     });
   } catch (error) {
     console.error("Image Upload Error:", error);
-    res.status(500).json({ message: "Failed to upload image" });
+    res.status(500).json({ 
+      message: "Failed to upload image",
+      errors: error
+    });
   }
 };
 
