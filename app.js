@@ -53,7 +53,7 @@ app.get("/", (req, res) => {
 
 const startServer = async () => {       
   try {
-    console.log("🔄 Attemmpting to connect to the database..");
+    console.log("🔄 Attempting to connect to the database..");
 
     await sequelize.authenticate();
     console.log("✅ Database connected successfully.");   

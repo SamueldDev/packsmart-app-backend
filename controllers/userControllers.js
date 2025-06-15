@@ -100,27 +100,79 @@ export const loginUser = async (req, res) => {
 // upload a picture adnd change profile image
 import cloudinary from "../config/cloudinary.js";
 
+// export const uploadProfileImage = async (req, res) => {
+//   try {
+//     const user = await User.findByPk(req.user.id);
+
+//     if (!req.file) {
+//       return res.status(400).json({ message: "No image uploaded" });
+//     }
+
+//     // Delete old image from Cloudinary
+//     if (user.cloudinaryPublicId) {
+//       await cloudinary.uploader.destroy(user.cloudinaryPublicId);
+//     }
+
+//     // Save new image details
+//     user.profileImage = req.file.path; // Cloudinary URL
+//     user.cloudinaryPublicId = req.file.filename; // unique Cloudinary ID
+//     await user.save();
+
+//     res.json({ message: "Profile image updated", imageUrl: user.profileImage });
+//   } catch (error) {
+//     console.error("Image Upload Error:", error);
+//     res.status(500).json({ message: "Failed to upload image" });
+//   }
+// };
+
+import streamifier from "streamifier"
+
 export const uploadProfileImage = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id);
+    if (!user) return res.status(404).json({ message: "User not found" });
 
     if (!req.file) {
       return res.status(400).json({ message: "No image uploaded" });
     }
 
-    // Delete old image from Cloudinary
+    // Upload buffer to Cloudinary using stream
+    const uploadToCloudinary = () => {
+      return new Promise((resolve, reject) => {
+        const uploadStream = cloudinary.uploader.upload_stream(
+          {
+            folder: "packsmart/users",
+            public_id: `user_${user.id}_${Date.now()}`,
+            resource_type: "image",
+          },
+          (error, result) => {
+            if (result) resolve(result);
+            else reject(error);
+          }
+        );
+        streamifier.createReadStream(req.file.buffer).pipe(uploadStream);
+      });
+    };
+
+    // Delete old image if exists
     if (user.cloudinaryPublicId) {
       await cloudinary.uploader.destroy(user.cloudinaryPublicId);
     }
 
-    // Save new image details
-    user.profileImage = req.file.path; // Cloudinary URL
-    user.cloudinaryPublicId = req.file.filename; // unique Cloudinary ID
+    const uploadResult = await uploadToCloudinary();
+
+    // Save new image URL and public ID
+    user.profileImage = uploadResult.secure_url;
+    user.cloudinaryPublicId = uploadResult.public_id;
     await user.save();
 
-    res.json({ message: "Profile image updated", imageUrl: user.profileImage });
+    res.json({
+      message: "Profile image updated successfully",
+      imageUrl: user.profileImage,
+    });
   } catch (error) {
     console.error("Image Upload Error:", error);
     res.status(500).json({ message: "Failed to upload image" });
   }
 };
+
