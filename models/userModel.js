@@ -54,7 +54,16 @@ User.init(
     resetPasswordExpires: {
       type: DataTypes.DATE,
       allowNull: true
+    },
+    profileImage: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    cloudinaryPublicId: {
+      type: DataTypes.STRING,
+      allowNull: true
     }
+
   },
   {
     sequelize,
