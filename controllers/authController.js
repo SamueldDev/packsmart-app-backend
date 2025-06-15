@@ -35,7 +35,7 @@ export const forgotPassword = async (req, res) => {
       subject: "Password Reset Request",
       text: `You requested a password reset. Click this link to reset your password: ${resetLink}`,
     });
-    console.log("Sending to SendGrid:", msg);
+  
 
 
     res.json({ message: "Reset link sent to your email if the account exists.",
